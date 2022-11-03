@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GitHub Search</string>
+    <string name="error_rate_limit">You have reached the limit requests. Try again later</string>
+</resources>
