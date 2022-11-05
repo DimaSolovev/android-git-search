@@ -23,26 +23,33 @@ public class ReposPresenter {
     }
 
     public void searchRepos(String q) {
-
         Disposable disposable = apiFactory
                 .getApiService()
                 .searchRepos(q)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ReposPayload>() {
-                               @Override
-                               public void accept(ReposPayload reposPayload) throws Exception {
-                                   mIActivity.showReposOnUI(reposPayload);
-                               }
-                           }, new Consumer<Throwable>() {
-                               @Override
-                               public void accept(Throwable throwable) throws Exception {
-                                   mIActivity.showErrorOnUI(throwable.getCause());
-                               }
-                           }
+                .subscribe(
+                        reposPayload -> mIActivity.showReposOnUI(reposPayload),
+                        throwable -> mIActivity.showErrorOnUI(throwable.getCause())
 
                 );
         compositeDisposable.add(disposable);
     }
 
+    public void getIssues(String userName, String repoName) {
+        Disposable disposable = apiFactory
+                .getApiService()
+                .getIssues(userName, repoName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        issuePayloads -> mIActivity.showIssueOnUI(issuePayloads),
+                        throwable -> mIActivity.showErrorOnUI(throwable.getCause())
+                );
+        compositeDisposable.add(disposable);
+    }
+
+    public void onStop() {
+        compositeDisposable.dispose();
+    }
 }

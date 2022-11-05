@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
-        android:id="@+id/textRepoName"
+        android:id="@+id/textViewRepoName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,13 +45,32 @@
         android:text="Repository description :"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textRepoName" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewRepoName" />
 
     <TextView
-        android:id="@+id/textRepoDescription"
+        android:id="@+id/textViewRepoDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/textRepoName" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewRepoName" />
+
+    <TextView
+        android:id="@+id/textViewIssuesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Issues:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRepoDescription" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/issueRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewIssuesLabel" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

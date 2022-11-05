@@ -1,5 +1,6 @@
 package com.dima.githubsearch.api;
 
+import com.dima.githubsearch.entity.IssuePayload;
 import com.dima.githubsearch.entity.Repos;
 import com.dima.githubsearch.entity.ReposPayload;
 import com.dima.githubsearch.entity.User;
@@ -13,7 +14,7 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-    @GET("search/repositories")
+    @GET("search/repositories?per_page=100")
     Observable<ReposPayload> searchRepos(
             @Query("q") String query
     );
@@ -31,8 +32,8 @@ public interface ApiService {
     @GET("repositories")
     Observable<List<Repos>> getRepos();
 
-    @GET("repos/{user}/{repo}/issues")
-    Observable<List<Repos>> getIssues(
+    @GET("repos/{user}/{repo}/issues&sort=created&direction=desc")
+    Observable<IssuePayload> getIssues(
             @Path("user") String user,
             @Path("repo") String repo
     );

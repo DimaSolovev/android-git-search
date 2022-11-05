@@ -1,5 +1,7 @@
 package com.dima.githubsearch.api;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import retrofit2.Retrofit;
@@ -14,7 +16,10 @@ public class ApiFactory {
     private ApiFactory() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                        .setFieldNamingStrategy(
+                                FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                        .create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
     }
