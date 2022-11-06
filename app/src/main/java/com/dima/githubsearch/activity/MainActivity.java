@@ -85,12 +85,9 @@ public class MainActivity extends AppCompatActivity implements IActivity {
                 .subscribe(charSequence -> {
                     repoPresenter.searchRepos(charSequence.toString());
                     repoAdapter.setOnReachEndListener(new RepoAdapter.OnReachEndListener() {
-
                         @Override
                         public void onReachEnd() {
-
                             repoPresenter.searchRepos(charSequence.toString());
-
                         }
                     });
                 });
