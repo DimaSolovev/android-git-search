@@ -69,7 +69,15 @@ public class MainActivity extends AppCompatActivity implements IActivity {
                 .queryTextChanges(searchView)
                 .throttleLast(100, TimeUnit.MILLISECONDS)
                 .debounce(200, TimeUnit.MILLISECONDS)
-                .subscribe(charSequence -> reposPresenter.searchRepos(charSequence.toString()));
+                .subscribe(charSequence -> {
+                    reposPresenter.searchRepos(charSequence.toString());
+                    reposSearchAdapter.setOnReachEndListener(new ReposSearchAdapter.OnReachEndListener() {
+                        @Override
+                        public void onReachEnd() {
+                            reposPresenter.searchRepos(charSequence.toString());
+                        }
+                    });
+                });
         compositeDisposable.add(disposable);
     }
 

@@ -14,8 +14,8 @@ public interface ApiService {
 
     @GET("search/repositories")
     Observable<ReposPayload> searchRepos(
-            @Query("q") String query
-//            , @Query("page") String page
+            @Query("q") String query,
+            @Query("page") int page
     );
 
     @GET("repos/{user}/{repo}/issues?state=all&sort=created&direction=asc")

@@ -21,10 +21,19 @@ public class ReposSearchAdapter extends RecyclerView.Adapter<ReposSearchAdapter.
 
     private ReposPayload mReposPayload;
     private Context context;
+    private OnReachEndListener onReachEndListener;
 
     public ReposSearchAdapter(Context context) {
         this.context = context;
         mReposPayload = new ReposPayload();
+    }
+
+    public interface OnReachEndListener {
+        void onReachEnd();
+    }
+
+    public void setOnReachEndListener(OnReachEndListener onReachEndListener) {
+        this.onReachEndListener = onReachEndListener;
     }
 
     public void updateList(ReposPayload reposPayload) {
@@ -46,6 +55,9 @@ public class ReposSearchAdapter extends RecyclerView.Adapter<ReposSearchAdapter.
                 .into(holder.imageViewAvatar);
         holder.textViewRepositoryName.setText(mReposPayload.getItems().get(position).getFullName());
         holder.textViewRepositoryDescription.setText(mReposPayload.getItems().get(position).getDescription());
+        if (position == mReposPayload.getItems().size()-1 && onReachEndListener != null) {
+            onReachEndListener.onReachEnd();
+        }
     }
 
     @Override
