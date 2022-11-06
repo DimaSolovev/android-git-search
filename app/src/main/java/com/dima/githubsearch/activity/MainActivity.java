@@ -4,6 +4,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -19,7 +21,7 @@ import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.RepoAdapter;
 import com.dima.githubsearch.models.IssuePayload;
 import com.dima.githubsearch.models.RepoPayload;
-import com.dima.githubsearch.presenter.ReposPresenter;
+import com.dima.githubsearch.presenter.RepoPresenter;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding3.appcompat.RxSearchView;
 
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
-    private ReposPresenter reposPresenter;
+    private RepoPresenter repoPresenter;
     private CompositeDisposable compositeDisposable;
     private RepoAdapter repoAdapter;
     private ProgressBar progressBar;
@@ -43,14 +45,13 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         setContentView(R.layout.activity_main);
         compositeDisposable = new CompositeDisposable();
         toolbar = findViewById(R.id.toolbar);
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
         repoAdapter = new RepoAdapter(MainActivity.this);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(this.repoAdapter);
-        reposPresenter = new ReposPresenter(MainActivity.this);
-
+        repoPresenter = new RepoPresenter(MainActivity.this);
         repoAdapter.setOnClickListener(new RepoAdapter.OnClickListener() {
             @Override
             public void onClick(int id) {
@@ -82,11 +83,14 @@ public class MainActivity extends AppCompatActivity implements IActivity {
                 .throttleLast(100, TimeUnit.MILLISECONDS)
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .subscribe(charSequence -> {
-                    reposPresenter.searchRepos(charSequence.toString());
+                    repoPresenter.searchRepos(charSequence.toString());
                     repoAdapter.setOnReachEndListener(new RepoAdapter.OnReachEndListener() {
+
                         @Override
                         public void onReachEnd() {
-                            reposPresenter.searchRepos(charSequence.toString());
+
+                            repoPresenter.searchRepos(charSequence.toString());
+
                         }
                     });
                 });
@@ -99,20 +103,23 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showErrorOnUI(Throwable t) {
-
-    }
-
+    public void showErrorOnUI(Throwable t) {}
 
     @Override
-    public void showIssueOnUI(IssuePayload issuePayload) {
-
-    }
+    public void showIssueOnUI(IssuePayload issuePayload) {}
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
-        reposPresenter.onStop();
+        repoPresenter.onStop();
+    }
+
+    public void prBar(Boolean b){
+        if(b){
+            progressBar.setVisibility(View.VISIBLE);
+        }else {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
     }
 }

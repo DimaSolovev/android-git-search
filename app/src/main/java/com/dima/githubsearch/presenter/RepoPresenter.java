@@ -10,15 +10,15 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class ReposPresenter {
+public class RepoPresenter {
 
     private ApiFactory apiFactory;
     private IActivity mIActivity;
     private CompositeDisposable compositeDisposable;
-    private RepoPayload mRepoPayload = new RepoPayload();
+    private RepoPayload repoPayload = new RepoPayload();
     private int page = 1;
 
-    public ReposPresenter(IActivity iActivity) {
+    public RepoPresenter(IActivity iActivity) {
         mIActivity = iActivity;
         compositeDisposable = new CompositeDisposable();
         apiFactory = apiFactory.getInstance();
@@ -33,8 +33,8 @@ public class ReposPresenter {
                 .subscribe(
                         reposPayload -> {
                             page++;
-                            mRepoPayload.addItems(reposPayload.getItems());
-                            mIActivity.showReposOnUI(mRepoPayload);
+                            repoPayload.addItems(reposPayload.getItems());
+                            mIActivity.showReposOnUI(repoPayload);
                         },
                         throwable -> mIActivity.showErrorOnUI(throwable.getCause())
 

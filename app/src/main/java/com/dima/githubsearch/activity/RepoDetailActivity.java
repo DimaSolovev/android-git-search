@@ -13,7 +13,7 @@ import com.dima.githubsearch.adapters.IssueAdapter;
 import com.dima.githubsearch.models.IssuePayload;
 import com.dima.githubsearch.models.Repo;
 import com.dima.githubsearch.models.RepoPayload;
-import com.dima.githubsearch.presenter.ReposPresenter;
+import com.dima.githubsearch.presenter.RepoPresenter;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +25,7 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
     private TextView textViewRepoDescription;
     private IssueAdapter issueAdapter;
     private RecyclerView issueRecyclerView;
-    private ReposPresenter reposPresenter;
+    private RepoPresenter repoPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +46,8 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         issueRecyclerView = findViewById(R.id.issueRecyclerView);
         issueRecyclerView.setLayoutManager(new LinearLayoutManager(RepoDetailActivity.this, LinearLayoutManager.VERTICAL, false));
         issueRecyclerView.setAdapter(issueAdapter);
-        reposPresenter = new ReposPresenter(RepoDetailActivity.this);
-        reposPresenter.getIssues(repo.getOwner().getLogin(),repo.getName());
+        repoPresenter = new RepoPresenter(RepoDetailActivity.this);
+        repoPresenter.getIssues(repo.getOwner().getLogin(),repo.getName());
 
     }
 
