@@ -4,25 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.IssueAdapter;
 import com.dima.githubsearch.models.IssuePayload;
-import com.dima.githubsearch.models.Repos;
-import com.dima.githubsearch.models.ReposPayload;
-import com.dima.githubsearch.models.User;
+import com.dima.githubsearch.models.Repo;
+import com.dima.githubsearch.models.RepoPayload;
 import com.dima.githubsearch.presenter.ReposPresenter;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 public class RepoDetailActivity extends AppCompatActivity implements IActivity {
 
-    private Repos repo;
+    private Repo repo;
     private ImageView imageView;
     private TextView textViewRepoName;
     private TextView textViewRepoDescription;
@@ -39,7 +36,7 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         textViewRepoName = findViewById(R.id.textViewRepoName);
         textViewRepoDescription = findViewById(R.id.textViewRepoDescription);
         String reposJSON = getIntent().getStringExtra("repo");
-        repo = new Gson().fromJson(reposJSON, Repos.class);
+        repo = new Gson().fromJson(reposJSON, Repo.class);
 
         Picasso.get().load(repo.getOwner().getAvatarUrl()).into(imageView);
         textViewRepoName.setText(repo.getName());
@@ -55,7 +52,7 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showReposOnUI(ReposPayload reposPayload) {
+    public void showReposOnUI(RepoPayload repoPayload) {
 
     }
 

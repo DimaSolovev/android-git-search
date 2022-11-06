@@ -1,7 +1,6 @@
 package com.dima.githubsearch.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +11,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
-import com.dima.githubsearch.activity.RepoDetailActivity;
-import com.dima.githubsearch.models.ReposPayload;
-import com.google.gson.Gson;
+import com.dima.githubsearch.models.RepoPayload;
 import com.squareup.picasso.Picasso;
 
-public class ReposSearchAdapter extends RecyclerView.Adapter<ReposSearchAdapter.ReposSearchViewHolder> {
+public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ReposSearchViewHolder> {
 
-    private ReposPayload mReposPayload;
+    private RepoPayload mRepoPayload;
     private Context context;
     private OnReachEndListener onReachEndListener;
     private OnClickListener onClickListener;
 
-    public ReposSearchAdapter(Context context) {
+    public RepoAdapter(Context context) {
         this.context = context;
-        mReposPayload = new ReposPayload();
+        mRepoPayload = new RepoPayload();
     }
 
     public interface OnReachEndListener {
@@ -45,13 +42,13 @@ public class ReposSearchAdapter extends RecyclerView.Adapter<ReposSearchAdapter.
         this.onClickListener = onClickListener;
     }
 
-    public void updateList(ReposPayload reposPayload) {
-        mReposPayload = reposPayload;
+    public void updateList(RepoPayload repoPayload) {
+        mRepoPayload = repoPayload;
         notifyDataSetChanged();
     }
 
-    public ReposPayload getmReposPayload() {
-        return mReposPayload;
+    public RepoPayload getmReposPayload() {
+        return mRepoPayload;
     }
 
     @NonNull
@@ -64,18 +61,18 @@ public class ReposSearchAdapter extends RecyclerView.Adapter<ReposSearchAdapter.
     @Override
     public void onBindViewHolder(@NonNull ReposSearchViewHolder holder, int position) {
         holder.setIsRecyclable(false);
-        Picasso.get().load(mReposPayload.getItems().get(position).getOwner().getAvatarUrl())
+        Picasso.get().load(mRepoPayload.getItems().get(position).getOwner().getAvatarUrl())
                 .into(holder.imageViewAvatar);
-        holder.textViewRepositoryName.setText(mReposPayload.getItems().get(position).getFullName());
-        holder.textViewRepositoryDescription.setText(mReposPayload.getItems().get(position).getDescription());
-        if (position == mReposPayload.getItems().size() - 1 && onReachEndListener != null) {
+        holder.textViewRepositoryName.setText(mRepoPayload.getItems().get(position).getFullName());
+        holder.textViewRepositoryDescription.setText(mRepoPayload.getItems().get(position).getDescription());
+        if (position == mRepoPayload.getItems().size() - 1 && onReachEndListener != null) {
             onReachEndListener.onReachEnd();
         }
     }
 
     @Override
     public int getItemCount() {
-        return mReposPayload.getItems().size();
+        return mRepoPayload.getItems().size();
     }
 
     class ReposSearchViewHolder extends RecyclerView.ViewHolder {

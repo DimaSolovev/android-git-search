@@ -1,12 +1,13 @@
 package com.dima.githubsearch.activity;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -15,11 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
-import com.dima.githubsearch.adapters.ReposSearchAdapter;
+import com.dima.githubsearch.adapters.RepoAdapter;
 import com.dima.githubsearch.models.IssuePayload;
-import com.dima.githubsearch.models.Repos;
-import com.dima.githubsearch.models.ReposPayload;
-import com.dima.githubsearch.models.User;
+import com.dima.githubsearch.models.RepoPayload;
 import com.dima.githubsearch.presenter.ReposPresenter;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding3.appcompat.RxSearchView;
@@ -35,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     private RecyclerView recyclerView;
     private ReposPresenter reposPresenter;
     private CompositeDisposable compositeDisposable;
-    private ReposSearchAdapter reposSearchAdapter;
+    private RepoAdapter repoAdapter;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +43,19 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         setContentView(R.layout.activity_main);
         compositeDisposable = new CompositeDisposable();
         toolbar = findViewById(R.id.toolbar);
+        progressBar = findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
-        reposSearchAdapter = new ReposSearchAdapter(MainActivity.this);
+        repoAdapter = new RepoAdapter(MainActivity.this);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(this.reposSearchAdapter);
+        recyclerView.setAdapter(this.repoAdapter);
         reposPresenter = new ReposPresenter(MainActivity.this);
 
-        reposSearchAdapter.setOnClickListener(new ReposSearchAdapter.OnClickListener() {
+        repoAdapter.setOnClickListener(new RepoAdapter.OnClickListener() {
             @Override
             public void onClick(int id) {
                 Intent intent = new Intent(MainActivity.this,RepoDetailActivity.class);
-                intent.putExtra("repo", new Gson().toJson(reposSearchAdapter.getmReposPayload().getItems().get(id)));
+                intent.putExtra("repo", new Gson().toJson(repoAdapter.getmReposPayload().getItems().get(id)));
                 startActivity(intent);
             }
         });
@@ -76,14 +77,13 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     public void registerToSearchViewEvents(SearchView searchView) {
-
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
                 .throttleLast(100, TimeUnit.MILLISECONDS)
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .subscribe(charSequence -> {
                     reposPresenter.searchRepos(charSequence.toString());
-                    reposSearchAdapter.setOnReachEndListener(new ReposSearchAdapter.OnReachEndListener() {
+                    repoAdapter.setOnReachEndListener(new RepoAdapter.OnReachEndListener() {
                         @Override
                         public void onReachEnd() {
                             reposPresenter.searchRepos(charSequence.toString());
@@ -94,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showReposOnUI(ReposPayload reposPayload) {
-        reposSearchAdapter.updateList(reposPayload);
+    public void showReposOnUI(RepoPayload repoPayload) {
+        repoAdapter.updateList(repoPayload);
     }
 
     @Override

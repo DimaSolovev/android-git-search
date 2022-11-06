@@ -6,19 +6,19 @@ import java.util.List;
 /**
  * Created by pedrodimoura on 03/08/16.
  */
-public class ReposPayload {
+public class RepoPayload {
 
-    private List<Repos> items = new ArrayList<>();
+    private List<Repo> items = new ArrayList<>();
 
-    public void addItems(List<Repos> repos){
+    public void addItems(List<Repo> repos){
         getItems().addAll(repos);
     }
 
-    public List<Repos> getItems() {
+    public List<Repo> getItems() {
         return items;
     }
 
-    public void setItems(List<Repos> items) {
+    public void setItems(List<Repo> items) {
         this.items = items;
     }
 

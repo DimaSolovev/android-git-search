@@ -1,14 +1,11 @@
 package com.dima.githubsearch.activity;
 
-import android.app.Activity;
-
 import com.dima.githubsearch.models.IssuePayload;
-import com.dima.githubsearch.models.ReposPayload;
-import com.dima.githubsearch.models.User;
+import com.dima.githubsearch.models.RepoPayload;
 
 public interface IActivity {
 
-    void showReposOnUI(ReposPayload reposPayload);
+    void showReposOnUI(RepoPayload repoPayload);
 
     void showErrorOnUI(Throwable t);
 

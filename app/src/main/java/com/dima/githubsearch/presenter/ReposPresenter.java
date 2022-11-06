@@ -3,7 +3,7 @@ package com.dima.githubsearch.presenter;
 import com.dima.githubsearch.activity.IActivity;
 import com.dima.githubsearch.api.ApiFactory;
 import com.dima.githubsearch.models.IssuePayload;
-import com.dima.githubsearch.models.ReposPayload;
+import com.dima.githubsearch.models.RepoPayload;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -15,7 +15,7 @@ public class ReposPresenter {
     private ApiFactory apiFactory;
     private IActivity mIActivity;
     private CompositeDisposable compositeDisposable;
-    private ReposPayload mReposPayload = new ReposPayload();
+    private RepoPayload mRepoPayload = new RepoPayload();
     private int page = 1;
 
     public ReposPresenter(IActivity iActivity) {
@@ -31,10 +31,10 @@ public class ReposPresenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        reposPayload ->{
+                        reposPayload -> {
                             page++;
-                            mReposPayload.addItems(reposPayload.getItems());
-                            mIActivity.showReposOnUI(mReposPayload);
+                            mRepoPayload.addItems(reposPayload.getItems());
+                            mIActivity.showReposOnUI(mRepoPayload);
                         },
                         throwable -> mIActivity.showErrorOnUI(throwable.getCause())
 

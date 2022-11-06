@@ -1,7 +1,7 @@
 package com.dima.githubsearch.api;
 
 import com.dima.githubsearch.models.Issue;
-import com.dima.githubsearch.models.ReposPayload;
+import com.dima.githubsearch.models.RepoPayload;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import retrofit2.http.Query;
 public interface ApiService {
 
     @GET("search/repositories")
-    Observable<ReposPayload> searchRepos(
+    Observable<RepoPayload> searchRepos(
             @Query("q") String query,
             @Query("page") int page
     );
