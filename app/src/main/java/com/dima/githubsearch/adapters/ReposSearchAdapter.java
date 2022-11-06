@@ -22,6 +22,7 @@ public class ReposSearchAdapter extends RecyclerView.Adapter<ReposSearchAdapter.
     private ReposPayload mReposPayload;
     private Context context;
     private OnReachEndListener onReachEndListener;
+    private OnClickListener onClickListener;
 
     public ReposSearchAdapter(Context context) {
         this.context = context;
@@ -32,13 +33,25 @@ public class ReposSearchAdapter extends RecyclerView.Adapter<ReposSearchAdapter.
         void onReachEnd();
     }
 
+    public interface OnClickListener {
+        void onClick(int id);
+    }
+
     public void setOnReachEndListener(OnReachEndListener onReachEndListener) {
         this.onReachEndListener = onReachEndListener;
+    }
+
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
     }
 
     public void updateList(ReposPayload reposPayload) {
         mReposPayload = reposPayload;
         notifyDataSetChanged();
+    }
+
+    public ReposPayload getmReposPayload() {
+        return mReposPayload;
     }
 
     @NonNull
@@ -55,7 +68,7 @@ public class ReposSearchAdapter extends RecyclerView.Adapter<ReposSearchAdapter.
                 .into(holder.imageViewAvatar);
         holder.textViewRepositoryName.setText(mReposPayload.getItems().get(position).getFullName());
         holder.textViewRepositoryDescription.setText(mReposPayload.getItems().get(position).getDescription());
-        if (position == mReposPayload.getItems().size()-1 && onReachEndListener != null) {
+        if (position == mReposPayload.getItems().size() - 1 && onReachEndListener != null) {
             onReachEndListener.onReachEnd();
         }
     }
@@ -79,13 +92,9 @@ public class ReposSearchAdapter extends RecyclerView.Adapter<ReposSearchAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    context.startActivity(
-                            new Intent(
-                                    context,
-                                    RepoDetailActivity.class)
-                                    .putExtra(
-                                            "repo",
-                                            new Gson().toJson(mReposPayload.getItems().get(getLayoutPosition()))));
+                    if (onClickListener != null) {
+                        onClickListener.onClick(getAdapterPosition());
+                    }
                 }
             });
         }
