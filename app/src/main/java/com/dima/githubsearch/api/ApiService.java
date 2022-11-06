@@ -1,5 +1,6 @@
 package com.dima.githubsearch.api;
 
+import com.dima.githubsearch.entity.Issue;
 import com.dima.githubsearch.entity.IssuePayload;
 import com.dima.githubsearch.entity.Repos;
 import com.dima.githubsearch.entity.ReposPayload;
@@ -16,24 +17,12 @@ public interface ApiService {
 
     @GET("search/repositories?per_page=100")
     Observable<ReposPayload> searchRepos(
-            @Query("q") String query
+            @Query("q") String query,
+            @Query("page") String page
     );
 
-    @GET("users/{user}")
-    Observable<User> getOwner(
-            @Path("user") String login
-    );
-
-    @GET("users/{login}/repos")
-    Observable<List<Repos>> getRepos(
-            @Path("login") String login
-    );
-
-    @GET("repositories")
-    Observable<List<Repos>> getRepos();
-
-    @GET("repos/{user}/{repo}/issues&sort=created&direction=desc")
-    Observable<IssuePayload> getIssues(
+    @GET("repos/{user}/{repo}/issues?state=all&sort=created&direction=asc")
+    Observable<List<Issue>> getIssues(
             @Path("user") String user,
             @Path("repo") String repo
     );

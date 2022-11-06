@@ -2,6 +2,7 @@ package com.dima.githubsearch.presenter;
 
 import com.dima.githubsearch.activity.IActivity;
 import com.dima.githubsearch.api.ApiFactory;
+import com.dima.githubsearch.entity.IssuePayload;
 import com.dima.githubsearch.entity.ReposPayload;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -41,6 +42,11 @@ public class ReposPresenter {
                 .getApiService()
                 .getIssues(userName, repoName)
                 .subscribeOn(Schedulers.io())
+                .map(issues -> {
+                    IssuePayload issuePayload = new IssuePayload();
+                    issuePayload.setItems(issues);
+                    return issuePayload;
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         issuePayloads -> mIActivity.showIssueOnUI(issuePayloads),

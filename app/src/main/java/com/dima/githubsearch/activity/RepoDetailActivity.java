@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,17 +40,19 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         String reposJSON = getIntent().getStringExtra("repo");
         repo = new Gson().fromJson(reposJSON, Repos.class);
 
-        issueAdapter = new IssueAdapter();
-        issueRecyclerView = findViewById(R.id.issueRecyclerView);
-        issueRecyclerView.setLayoutManager(new LinearLayoutManager(RepoDetailActivity.this, LinearLayoutManager.VERTICAL, false));
-        issueRecyclerView.setAdapter(issueAdapter);
-        reposPresenter = new ReposPresenter(RepoDetailActivity.this);
-        reposPresenter.getIssues(repo.getOwner().getName(),repo.getName());
+        Log.i("repoInfo",repo.getName());
+        Log.i("repoInfo",repo.getOwner().getLogin());
 
         Picasso.get().load(repo.getOwner().getAvatarUrl()).into(imageView);
         textViewRepoName.setText(repo.getName());
         textViewRepoDescription.setText(repo.getDescription());
 
+        issueAdapter = new IssueAdapter(RepoDetailActivity.this);
+        issueRecyclerView = findViewById(R.id.issueRecyclerView);
+        issueRecyclerView.setLayoutManager(new LinearLayoutManager(RepoDetailActivity.this, LinearLayoutManager.VERTICAL, false));
+        issueRecyclerView.setAdapter(issueAdapter);
+        reposPresenter = new ReposPresenter(RepoDetailActivity.this);
+        reposPresenter.getIssues(repo.getOwner().getLogin(),repo.getName());
 
     }
 

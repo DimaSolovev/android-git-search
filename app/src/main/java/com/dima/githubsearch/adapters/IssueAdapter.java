@@ -1,5 +1,6 @@
 package com.dima.githubsearch.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,16 @@ import com.dima.githubsearch.entity.ReposPayload;
 
 public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHolder> {
 
-    private IssuePayload issuePayload = new IssuePayload();
+    private IssuePayload issuePayload;
+    private Context mContext;
+
+    public IssueAdapter(Context mContext) {
+        this.issuePayload  = new IssuePayload();
+        this.mContext = mContext;
+    }
 
     public void updateList(IssuePayload issuePayload) {
-        issuePayload = issuePayload;
+        this.issuePayload = issuePayload;
         notifyDataSetChanged();
     }
 

@@ -8,7 +8,6 @@ public class User {
     private String login;
     private Integer id;
     private String avatarUrl;
-    private String name;
 
     public String getLogin() {
         return login;
@@ -34,21 +33,12 @@ public class User {
         this.avatarUrl = avatarUrl;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public String toString() {
         return "User{" +
                 "login='" + login + '\'' +
                 ", id=" + id +
                 ", avatarUrl='" + avatarUrl + '\'' +
-                ", name='" + name + '\'' +
                 '}';
     }
 }
