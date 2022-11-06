@@ -10,18 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
-import com.dima.githubsearch.entity.IssuePayload;
-import com.dima.githubsearch.entity.ReposPayload;
+import com.dima.githubsearch.models.IssuePayload;
 
 public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHolder> {
 
-    private IssuePayload issuePayload;
-    private Context mContext;
-
-    public IssueAdapter(Context mContext) {
-        this.issuePayload  = new IssuePayload();
-        this.mContext = mContext;
-    }
+    private IssuePayload issuePayload = new IssuePayload();
 
     public void updateList(IssuePayload issuePayload) {
         this.issuePayload = issuePayload;

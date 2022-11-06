@@ -1,4 +1,4 @@
-package com.dima.githubsearch.entity;
+package com.dima.githubsearch.models;
 
 import java.util.ArrayList;
 import java.util.List;

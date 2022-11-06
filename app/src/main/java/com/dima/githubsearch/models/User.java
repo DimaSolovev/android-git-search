@@ -1,4 +1,4 @@
-package com.dima.githubsearch.entity;
+package com.dima.githubsearch.models;
 
 /**
  * Created by pedrodimoura on 22/07/16.
@@ -6,7 +6,6 @@ package com.dima.githubsearch.entity;
 public class User {
 
     private String login;
-    private Integer id;
     private String avatarUrl;
 
     public String getLogin() {
@@ -15,14 +14,6 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getAvatarUrl() {
@@ -37,7 +28,6 @@ public class User {
     public String toString() {
         return "User{" +
                 "login='" + login + '\'' +
-                ", id=" + id +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 '}';
     }

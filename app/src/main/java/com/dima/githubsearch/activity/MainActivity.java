@@ -3,7 +3,6 @@ package com.dima.githubsearch.activity;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.ReposSearchAdapter;
-import com.dima.githubsearch.entity.IssuePayload;
-import com.dima.githubsearch.entity.ReposPayload;
-import com.dima.githubsearch.entity.User;
+import com.dima.githubsearch.models.IssuePayload;
+import com.dima.githubsearch.models.ReposPayload;
+import com.dima.githubsearch.models.User;
 import com.dima.githubsearch.presenter.ReposPresenter;
 import com.jakewharton.rxbinding3.appcompat.RxSearchView;
 
@@ -80,24 +79,10 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showUserOnUI(User user) {
-
-    }
-
-    @Override
     public void showErrorOnUI(Throwable t) {
 
     }
 
-    @Override
-    public void showErrorOnUI(int resId) {
-
-    }
-
-    @Override
-    public Activity getActivityContext() {
-        return null;
-    }
 
     @Override
     public void showIssueOnUI(IssuePayload issuePayload) {

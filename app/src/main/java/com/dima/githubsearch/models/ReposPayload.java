@@ -1,4 +1,4 @@
-package com.dima.githubsearch.entity;
+package com.dima.githubsearch.models;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,10 @@ import java.util.List;
 public class ReposPayload {
 
     private List<Repos> items = new ArrayList<>();
+
+    public void addItems(List<Repos> repos){
+        getItems().addAll(repos);
+    }
 
     public List<Repos> getItems() {
         return items;

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.activity.RepoDetailActivity;
-import com.dima.githubsearch.entity.ReposPayload;
+import com.dima.githubsearch.models.ReposPayload;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 

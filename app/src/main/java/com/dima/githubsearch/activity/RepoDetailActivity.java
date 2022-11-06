@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.IssueAdapter;
-import com.dima.githubsearch.entity.IssuePayload;
-import com.dima.githubsearch.entity.Repos;
-import com.dima.githubsearch.entity.ReposPayload;
-import com.dima.githubsearch.entity.User;
+import com.dima.githubsearch.models.IssuePayload;
+import com.dima.githubsearch.models.Repos;
+import com.dima.githubsearch.models.ReposPayload;
+import com.dima.githubsearch.models.User;
 import com.dima.githubsearch.presenter.ReposPresenter;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -34,20 +34,18 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repo_detail);
+
         imageView = findViewById(R.id.imageView);
         textViewRepoName = findViewById(R.id.textViewRepoName);
         textViewRepoDescription = findViewById(R.id.textViewRepoDescription);
         String reposJSON = getIntent().getStringExtra("repo");
         repo = new Gson().fromJson(reposJSON, Repos.class);
 
-        Log.i("repoInfo",repo.getName());
-        Log.i("repoInfo",repo.getOwner().getLogin());
-
         Picasso.get().load(repo.getOwner().getAvatarUrl()).into(imageView);
         textViewRepoName.setText(repo.getName());
         textViewRepoDescription.setText(repo.getDescription());
 
-        issueAdapter = new IssueAdapter(RepoDetailActivity.this);
+        issueAdapter = new IssueAdapter();
         issueRecyclerView = findViewById(R.id.issueRecyclerView);
         issueRecyclerView.setLayoutManager(new LinearLayoutManager(RepoDetailActivity.this, LinearLayoutManager.VERTICAL, false));
         issueRecyclerView.setAdapter(issueAdapter);
@@ -62,17 +60,7 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showUserOnUI(User user) {
-
-    }
-
-    @Override
     public void showErrorOnUI(Throwable t) {
-
-    }
-
-    @Override
-    public void showErrorOnUI(int resId) {
 
     }
 
@@ -81,8 +69,4 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         issueAdapter.updateList(issuePayload);
     }
 
-    @Override
-    public Activity getActivityContext() {
-        return null;
-    }
 }

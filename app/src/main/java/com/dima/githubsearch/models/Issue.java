@@ -1,4 +1,4 @@
-package com.dima.githubsearch.entity;
+package com.dima.githubsearch.models;
 
 public class Issue {
 

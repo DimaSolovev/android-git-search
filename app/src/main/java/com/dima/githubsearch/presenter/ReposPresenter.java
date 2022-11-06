@@ -2,13 +2,11 @@ package com.dima.githubsearch.presenter;
 
 import com.dima.githubsearch.activity.IActivity;
 import com.dima.githubsearch.api.ApiFactory;
-import com.dima.githubsearch.entity.IssuePayload;
-import com.dima.githubsearch.entity.ReposPayload;
+import com.dima.githubsearch.models.IssuePayload;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class ReposPresenter {

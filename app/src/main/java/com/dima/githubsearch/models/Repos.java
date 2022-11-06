@@ -1,20 +1,11 @@
-package com.dima.githubsearch.entity;
+package com.dima.githubsearch.models;
 
 public class Repos {
 
-    private Integer id;
     private String name;
     private String fullName;
     private User owner;
     private String description;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -51,7 +42,6 @@ public class Repos {
     @Override
     public String toString() {
         return "Repos{" +
-                "id=" + id +
                 ", name='" + name + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", owner=" + owner +
