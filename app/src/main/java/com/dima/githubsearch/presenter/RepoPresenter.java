@@ -24,6 +24,10 @@ public class RepoPresenter {
         apiFactory = apiFactory.getInstance();
     }
 
+    public RepoPayload getRepoPayload() {
+        return repoPayload;
+    }
+
     public void searchRepos(String q) {
         Disposable disposable = apiFactory
                 .getApiService()

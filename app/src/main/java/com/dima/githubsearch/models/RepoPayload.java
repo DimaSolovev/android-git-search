@@ -14,6 +14,10 @@ public class RepoPayload {
         getItems().addAll(repos);
     }
 
+    public void clearItems(){
+        items.clear();
+    }
+
     public List<Repo> getItems() {
         return items;
     }

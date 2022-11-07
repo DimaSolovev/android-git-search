@@ -111,12 +111,4 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         compositeDisposable.dispose();
         repoPresenter.onStop();
     }
-
-    public void prBar(Boolean b){
-        if(b){
-            progressBar.setVisibility(View.VISIBLE);
-        }else {
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-    }
 }
