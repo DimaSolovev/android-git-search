@@ -80,9 +80,8 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     public void registerToSearchViewEvents(SearchView searchView) {
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
-                .debounce(300, TimeUnit.MILLISECONDS)
                 .throttleLast(100, TimeUnit.MILLISECONDS)
-                .debounce(200, TimeUnit.MILLISECONDS)
+                .debounce(1000, TimeUnit.MILLISECONDS)
                 .filter(charSequence -> {
                     if (TextUtils.isEmpty(charSequence)) {
                         repoPresenter.loadDefaultRepos();
@@ -90,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
                     return !TextUtils.isEmpty(charSequence);
                 })
                 .subscribe(charSequence -> {
+                    Log.i("charSequence", charSequence.toString());
                     if (charSequence.length() != charSequenceLength) {
                         repoPresenter.clearRepoPayload();
                         charSequenceLength = charSequence.length();
