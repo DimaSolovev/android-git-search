@@ -78,24 +78,26 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     public void registerToSearchViewEvents(SearchView searchView) {
+        progressBar.setVisibility(View.VISIBLE);
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
                 .throttleLast(100, TimeUnit.MILLISECONDS)
                 .debounce(1000, TimeUnit.MILLISECONDS)
                 .filter(charSequence -> {
                     if (TextUtils.isEmpty(charSequence)) {
+                        charSequenceLength = 0;
                         repoPresenter.loadDefaultRepos();
                     }
                     return !TextUtils.isEmpty(charSequence);
                 })
                 .subscribe(charSequence -> {
-                    Log.i("charSequence", charSequence.toString());
                     if (charSequence.length() != charSequenceLength) {
                         repoPresenter.clearRepoPayload();
                         charSequenceLength = charSequence.length();
                     }
                     repoPresenter.searchRepos(charSequence.toString());
                     repoAdapter.setOnReachEndListener(() -> {
+                                progressBar.setVisibility(View.VISIBLE);
                                 repoPresenter.searchRepos(charSequence.toString());
                             }
                     );
@@ -116,7 +118,16 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showIssueOnUI(IssuePayload issuePayload) {
+    public void showIssueOnUI(IssuePayload issuePayload) {}
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -42,10 +42,10 @@ public class RepoPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         reposPayload -> {
-                            Log.i("charSeq",q);
                             page++;
                             repoPayload.addItems(reposPayload.getItems());
                             mIActivity.showReposOnUI(repoPayload);
+                            mIActivity.hideProgressBar();
                         },
                         throwable -> mIActivity.showErrorOnUI(R.string.error_rate_limit)
                 );
@@ -82,9 +82,14 @@ public class RepoPresenter {
                     return reposPayload;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        mIActivity::showReposOnUI,
-                        throwable -> mIActivity.showErrorOnUI(R.string.error_rate_limit)
+                .subscribe(repoPayload -> {
+                            mIActivity.hideProgressBar();
+                            mIActivity.showReposOnUI(repoPayload);
+                        },
+                        throwable -> {
+                            mIActivity.hideProgressBar();
+                            mIActivity.showErrorOnUI(R.string.error_default_repo);
+                        }
                 );
         compositeDisposable.add(disposable);
     }

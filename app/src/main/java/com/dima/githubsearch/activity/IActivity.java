@@ -11,4 +11,8 @@ public interface IActivity {
 
     void showIssueOnUI(IssuePayload issuePayload);
 
+    void hideProgressBar();
+
+    void showProgressBar();
+
 }

@@ -66,4 +66,11 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         issueAdapter.updateList(issuePayload);
     }
 
+    @Override
+    public void hideProgressBar() {}
+
+    @Override
+    public void showProgressBar() {
+
+    }
 }
