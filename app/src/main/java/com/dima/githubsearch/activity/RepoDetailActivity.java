@@ -54,9 +54,7 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showReposOnUI(RepoPayload repoPayload) {
-
-    }
+    public void showReposOnUI(RepoPayload repoPayload) {}
 
     @Override
     public void showErrorOnUI(int resId) {

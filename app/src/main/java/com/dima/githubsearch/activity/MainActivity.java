@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     public void registerToSearchViewEvents(SearchView searchView) {
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
+                .debounce(300, TimeUnit.MILLISECONDS)
                 .throttleLast(100, TimeUnit.MILLISECONDS)
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .filter(charSequence -> {
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
                             }
                     );
                 }, throwable -> {
-                    progressBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
                 });
         compositeDisposable.add(disposable);
     }

@@ -21,11 +21,6 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
     private OnReachEndListener onReachEndListener;
     private OnClickListener onClickListener;
 
-    public void adapterClear() {
-        mRepoPayload.clearItems();
-        notifyDataSetChanged();
-    }
-
     public RepoAdapter(Context context) {
         this.context = context;
         mRepoPayload = new RepoPayload();

@@ -83,7 +83,8 @@ public class RepoPresenter {
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        mIActivity::showReposOnUI
+                        mIActivity::showReposOnUI,
+                        throwable -> mIActivity.showErrorOnUI(R.string.error_rate_limit)
                 );
         compositeDisposable.add(disposable);
     }
