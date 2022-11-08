@@ -38,6 +38,7 @@ public class RepoPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         reposPayload -> {
+                            mIActivity.showProgressBar();
                             page++;
                             repoPayload.addItems(reposPayload.getItems());
                             mIActivity.showReposOnUI(repoPayload);
