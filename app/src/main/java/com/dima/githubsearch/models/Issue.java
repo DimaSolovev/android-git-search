@@ -10,20 +10,23 @@ public class Issue {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getState() {
         return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getCreatedAt() {
         return createdAt;
     }
 
-    @Override
-    public String toString() {
-        return "Issue{" +
-                "title='" + title + '\'' +
-                ", state='" + state + '\'' +
-                ", created_at='" + createdAt + '\'' +
-                '}';
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

@@ -20,6 +20,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true"
             android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>

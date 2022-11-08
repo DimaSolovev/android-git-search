@@ -14,12 +14,17 @@ import com.dima.githubsearch.R;
 import com.dima.githubsearch.models.RepoPayload;
 import com.squareup.picasso.Picasso;
 
-public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ReposSearchViewHolder> {
+public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
 
     private RepoPayload mRepoPayload;
     private Context context;
     private OnReachEndListener onReachEndListener;
     private OnClickListener onClickListener;
+
+    public void adapterClear() {
+        mRepoPayload.clearItems();
+        notifyDataSetChanged();
+    }
 
     public RepoAdapter(Context context) {
         this.context = context;
@@ -47,19 +52,19 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ReposSearchVie
         notifyDataSetChanged();
     }
 
-    public RepoPayload getmReposPayload() {
+    public RepoPayload getReposPayload() {
         return mRepoPayload;
     }
 
     @NonNull
     @Override
-    public ReposSearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RepoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.repo_item, parent, false);
-        return new ReposSearchViewHolder(view);
+        return new RepoViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReposSearchViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RepoViewHolder holder, int position) {
         holder.setIsRecyclable(false);
         Picasso.get().load(mRepoPayload.getItems().get(position).getOwner().getAvatarUrl())
                 .into(holder.imageViewAvatar);
@@ -75,13 +80,13 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.ReposSearchVie
         return mRepoPayload.getItems().size();
     }
 
-    class ReposSearchViewHolder extends RecyclerView.ViewHolder {
+    class RepoViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imageViewAvatar;
-        private TextView textViewRepositoryName;
-        private TextView textViewRepositoryDescription;
+        private final ImageView imageViewAvatar;
+        private final TextView textViewRepositoryName;
+        private final TextView textViewRepositoryDescription;
 
-        public ReposSearchViewHolder(@NonNull View itemView) {
+        public RepoViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewAvatar = itemView.findViewById(R.id.avatar);
             textViewRepositoryName = itemView.findViewById(R.id.repositoryName);

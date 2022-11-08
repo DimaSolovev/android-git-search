@@ -1,12 +1,13 @@
 package com.dima.githubsearch.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.IssueAdapter;
@@ -19,36 +20,29 @@ import com.squareup.picasso.Picasso;
 
 public class RepoDetailActivity extends AppCompatActivity implements IActivity {
 
-    private Repo repo;
-    private ImageView imageView;
-    private TextView textViewRepoName;
-    private TextView textViewRepoDescription;
     private IssueAdapter issueAdapter;
-    private RecyclerView issueRecyclerView;
-    private RepoPresenter repoPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repo_detail);
 
-        imageView = findViewById(R.id.imageView);
-        textViewRepoName = findViewById(R.id.textViewRepoName);
-        textViewRepoDescription = findViewById(R.id.textViewRepoDescription);
+        ImageView imageView = findViewById(R.id.imageView);
+        TextView textViewRepoName = findViewById(R.id.textViewRepoName);
+        TextView textViewRepoDescription = findViewById(R.id.textViewRepoDescription);
         String reposJSON = getIntent().getStringExtra("repo");
-        repo = new Gson().fromJson(reposJSON, Repo.class);
+        Repo repo = new Gson().fromJson(reposJSON, Repo.class);
 
         Picasso.get().load(repo.getOwner().getAvatarUrl()).into(imageView);
         textViewRepoName.setText(repo.getName());
         textViewRepoDescription.setText(repo.getDescription());
 
         issueAdapter = new IssueAdapter();
-        issueRecyclerView = findViewById(R.id.issueRecyclerView);
+        RecyclerView issueRecyclerView = findViewById(R.id.issueRecyclerView);
         issueRecyclerView.setLayoutManager(new LinearLayoutManager(RepoDetailActivity.this, LinearLayoutManager.VERTICAL, false));
         issueRecyclerView.setAdapter(issueAdapter);
-        repoPresenter = new RepoPresenter(RepoDetailActivity.this);
-        repoPresenter.getIssues(repo.getOwner().getLogin(),repo.getName());
-
+        RepoPresenter repoPresenter = new RepoPresenter(RepoDetailActivity.this);
+        repoPresenter.getIssues(repo.getOwner().getLogin(), repo.getName());
     }
 
     @Override
@@ -57,8 +51,8 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showErrorOnUI(Throwable t) {
-
+    public void showErrorOnUI(int resId) {
+        Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.dima.githubsearch.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +41,9 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
 
     class IssueViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textViewIssueTitle;
-        private TextView textViewIssueCreatedAt;
-        private TextView textViewIssueStatus;
+        private final TextView textViewIssueTitle;
+        private final TextView textViewIssueCreatedAt;
+        private final TextView textViewIssueStatus;
 
         public IssueViewHolder(@NonNull View itemView) {
             super(itemView);

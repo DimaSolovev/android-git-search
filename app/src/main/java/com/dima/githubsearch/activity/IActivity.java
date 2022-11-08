@@ -7,7 +7,7 @@ public interface IActivity {
 
     void showReposOnUI(RepoPayload repoPayload);
 
-    void showErrorOnUI(Throwable t);
+    void showErrorOnUI(int resId);
 
     void showIssueOnUI(IssuePayload issuePayload);
 

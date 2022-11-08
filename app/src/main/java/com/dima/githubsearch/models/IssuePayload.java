@@ -15,10 +15,4 @@ public class IssuePayload {
         this.items = items;
     }
 
-    @Override
-    public String toString() {
-        return "IssuePayload{" +
-                "items=" + items +
-                '}';
-    }
 }

@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">GitHub Search</string>
     <string name="error_rate_limit">You have reached the limit requests. Try again later</string>
+    <string name="repo_avatar">avatar</string>
+    <string name="repository_name">Repository name :</string>
+    <string name="repository_descr">Repository descr :</string>
+    <string name="issues">Issues:</string>
+    <string name="created_at">Created at:</string>
+    <string name="status">Status:</string>
 </resources>
