@@ -19,4 +19,7 @@ public class RepoPayload {
         return items;
     }
 
+    public void setItems(List<Repo> items) {
+        this.items = items;
+    }
 }

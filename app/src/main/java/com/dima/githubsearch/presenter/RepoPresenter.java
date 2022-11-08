@@ -1,10 +1,14 @@
 package com.dima.githubsearch.presenter;
 
+import android.util.Log;
+
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.activity.IActivity;
 import com.dima.githubsearch.api.ApiFactory;
 import com.dima.githubsearch.models.IssuePayload;
 import com.dima.githubsearch.models.RepoPayload;
+
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -38,6 +42,7 @@ public class RepoPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         reposPayload -> {
+                            Log.i("charSeq",q);
                             page++;
                             repoPayload.addItems(reposPayload.getItems());
                             mIActivity.showReposOnUI(repoPayload);
@@ -61,6 +66,24 @@ public class RepoPresenter {
                 .subscribe(
                         mIActivity::showIssueOnUI,
                         throwable -> mIActivity.showErrorOnUI(R.string.error_rate_limit)
+                );
+        compositeDisposable.add(disposable);
+    }
+
+    public void loadDefaultRepos() {
+
+        Disposable disposable = apiFactory
+                .getApiService()
+                .getRepos()
+                .subscribeOn(Schedulers.io())
+                .map(repos -> {
+                    RepoPayload reposPayload = new RepoPayload();
+                    reposPayload.setItems(repos);
+                    return reposPayload;
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        mIActivity::showReposOnUI
                 );
         compositeDisposable.add(disposable);
     }

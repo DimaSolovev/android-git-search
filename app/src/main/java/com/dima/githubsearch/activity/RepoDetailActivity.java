@@ -1,5 +1,6 @@
 package com.dima.githubsearch.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,10 +31,17 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         ImageView imageView = findViewById(R.id.imageView);
         TextView textViewRepoName = findViewById(R.id.textViewRepoName);
         TextView textViewRepoDescription = findViewById(R.id.textViewRepoDescription);
-        String reposJSON = getIntent().getStringExtra("repo");
+
+        Intent intent = getIntent();
+        String reposJSON = null;
+        if (intent != null && intent.hasExtra("repo")) {
+            reposJSON = intent.getStringExtra("repo");
+        } else {
+            finish();
+        }
         Repo repo = new Gson().fromJson(reposJSON, Repo.class);
 
-        Picasso.get().load(repo.getOwner().getAvatarUrl()).into(imageView);
+        Picasso.get().load(repo.getOwner().getAvatarUrl()).placeholder(R.drawable.def).into(imageView);
         textViewRepoName.setText(repo.getName());
         textViewRepoDescription.setText(repo.getDescription());
 

@@ -83,9 +83,8 @@ public class MainActivity extends AppCompatActivity implements IActivity {
                 .throttleLast(100, TimeUnit.MILLISECONDS)
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .filter(charSequence -> {
-                    Log.i("charSequence", charSequence.toString());
                     if (TextUtils.isEmpty(charSequence)) {
-                        repoPresenter.clearRepoPayload();
+                        repoPresenter.loadDefaultRepos();
                     }
                     return !TextUtils.isEmpty(charSequence);
                 })
