@@ -1,14 +1,10 @@
 package com.dima.githubsearch.presenter;
 
-import android.util.Log;
-
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.activity.IActivity;
 import com.dima.githubsearch.api.ApiFactory;
 import com.dima.githubsearch.models.IssuePayload;
 import com.dima.githubsearch.models.RepoPayload;
-
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -47,7 +43,10 @@ public class RepoPresenter {
                             mIActivity.showReposOnUI(repoPayload);
                             mIActivity.hideProgressBar();
                         },
-                        throwable -> mIActivity.showErrorOnUI(R.string.error_rate_limit)
+                        throwable -> {
+                            mIActivity.hideProgressBar();
+                            mIActivity.showErrorOnUI(R.string.error_rate_limit);
+                        }
                 );
         compositeDisposable.add(disposable);
     }
@@ -63,9 +62,14 @@ public class RepoPresenter {
                     return issuePayload;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        mIActivity::showIssueOnUI,
-                        throwable -> mIActivity.showErrorOnUI(R.string.error_rate_limit)
+                .subscribe(issuePayload -> {
+                            mIActivity.showIssueOnUI(issuePayload);
+                            mIActivity.hideProgressBar();
+                        },
+                        throwable -> {
+                            mIActivity.hideProgressBar();
+                            mIActivity.showErrorOnUI(R.string.error_rate_limit);
+                        }
                 );
         compositeDisposable.add(disposable);
     }

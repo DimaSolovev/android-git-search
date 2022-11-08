@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -52,13 +51,10 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(this.repoAdapter);
         repoPresenter = new RepoPresenter(MainActivity.this);
-        repoAdapter.setOnClickListener(new RepoAdapter.OnClickListener() {
-            @Override
-            public void onClick(int id) {
-                Intent intent = new Intent(MainActivity.this, RepoDetailActivity.class);
-                intent.putExtra("repo", new Gson().toJson(repoAdapter.getReposPayload().getItems().get(id)));
-                startActivity(intent);
-            }
+        repoAdapter.setOnClickListener(id -> {
+            Intent intent = new Intent(MainActivity.this, RepoDetailActivity.class);
+            intent.putExtra("repo", new Gson().toJson(repoAdapter.getReposPayload().getItems().get(id)));
+            startActivity(intent);
         });
     }
 

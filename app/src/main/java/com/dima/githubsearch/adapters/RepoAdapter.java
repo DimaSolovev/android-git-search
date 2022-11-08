@@ -87,12 +87,9 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
             imageViewAvatar = itemView.findViewById(R.id.avatar);
             textViewRepositoryName = itemView.findViewById(R.id.repositoryName);
             textViewRepositoryDescription = itemView.findViewById(R.id.repositoryDescription);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onClickListener != null) {
-                        onClickListener.onClick(getAdapterPosition());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (onClickListener != null) {
+                    onClickListener.onClick(getAdapterPosition());
                 }
             });
         }

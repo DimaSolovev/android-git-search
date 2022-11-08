@@ -2,7 +2,9 @@ package com.dima.githubsearch.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +24,14 @@ import com.squareup.picasso.Picasso;
 public class RepoDetailActivity extends AppCompatActivity implements IActivity {
 
     private IssueAdapter issueAdapter;
+    private ProgressBar progressBarIssue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repo_detail);
 
+        progressBarIssue = findViewById(R.id.progressBarIssue);
         ImageView imageView = findViewById(R.id.imageView);
         TextView textViewRepoName = findViewById(R.id.textViewRepoName);
         TextView textViewRepoDescription = findViewById(R.id.textViewRepoDescription);
@@ -50,6 +54,7 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         issueRecyclerView.setLayoutManager(new LinearLayoutManager(RepoDetailActivity.this, LinearLayoutManager.VERTICAL, false));
         issueRecyclerView.setAdapter(issueAdapter);
         RepoPresenter repoPresenter = new RepoPresenter(RepoDetailActivity.this);
+        progressBarIssue.setVisibility(View.VISIBLE);
         repoPresenter.getIssues(repo.getOwner().getLogin(), repo.getName());
     }
 
@@ -67,10 +72,12 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void hideProgressBar() {}
+    public void hideProgressBar() {
+        progressBarIssue.setVisibility(View.INVISIBLE);
+    }
 
     @Override
     public void showProgressBar() {
-
+        progressBarIssue.setVisibility(View.VISIBLE);
     }
 }
