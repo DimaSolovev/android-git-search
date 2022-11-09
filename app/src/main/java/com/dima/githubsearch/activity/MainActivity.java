@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         recyclerView.setAdapter(this.repoAdapter);
         repoPresenter = new RepoPresenter(MainActivity.this);
         repoAdapter.setOnClickListener(id -> {
-            Intent intent = new Intent(MainActivity.this, RepoDetailActivity.class);
+            Intent intent = RepoDetailActivity.newIntent(MainActivity.this);
             intent.putExtra("repo", new Gson().toJson(repoAdapter.getReposPayload().getItems().get(id)));
             startActivity(intent);
         });
@@ -113,7 +113,8 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showIssueOnUI(IssuePayload issuePayload) {}
+    public void showIssueOnUI(IssuePayload issuePayload) {
+    }
 
     @Override
     public void hideProgressBar() {

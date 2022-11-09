@@ -1,5 +1,6 @@
 package com.dima.githubsearch.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -56,6 +57,10 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         RepoPresenter repoPresenter = new RepoPresenter(RepoDetailActivity.this);
         progressBarIssue.setVisibility(View.VISIBLE);
         repoPresenter.getIssues(repo.getOwner().getLogin(), repo.getName());
+    }
+
+    public static Intent newIntent(Context context){
+        return new Intent(context, RepoDetailActivity.class);
     }
 
     @Override
