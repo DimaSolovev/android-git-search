@@ -52,7 +52,6 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
 
         issueAdapter = new IssueAdapter();
         RecyclerView issueRecyclerView = findViewById(R.id.issueRecyclerView);
-        issueRecyclerView.setLayoutManager(new LinearLayoutManager(RepoDetailActivity.this, LinearLayoutManager.VERTICAL, false));
         issueRecyclerView.setAdapter(issueAdapter);
         RepoPresenter repoPresenter = new RepoPresenter(RepoDetailActivity.this);
         progressBarIssue.setVisibility(View.VISIBLE);

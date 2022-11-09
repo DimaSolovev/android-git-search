@@ -48,8 +48,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         setSupportActionBar(toolbar);
         repoAdapter = new RepoAdapter(MainActivity.this);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(this.repoAdapter);
+        recyclerView.setAdapter(repoAdapter);
         repoPresenter = new RepoPresenter(MainActivity.this);
         repoAdapter.setOnClickListener(id -> {
             Intent intent = RepoDetailActivity.newIntent(MainActivity.this);
