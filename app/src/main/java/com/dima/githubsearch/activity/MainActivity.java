@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
                 .throttleLast(100, TimeUnit.MILLISECONDS)
-                .debounce(1000, TimeUnit.MILLISECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .filter(charSequence -> {
                     if (TextUtils.isEmpty(charSequence)) {
                         charSequenceLength = 0;
