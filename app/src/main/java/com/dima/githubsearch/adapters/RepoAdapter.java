@@ -60,7 +60,6 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RepoViewHolder holder, int position) {
-        holder.setIsRecyclable(false);
         Picasso.get().load(mRepoPayload.getItems().get(position).getOwner().getAvatarUrl())
                 .placeholder(R.drawable.def)
                 .into(holder.imageViewAvatar);

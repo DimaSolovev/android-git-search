@@ -76,25 +76,25 @@ public class MainActivity extends AppCompatActivity implements IActivity {
 
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
-                .doOnSubscribe(disposable1 -> progressBar.setVisibility(View.VISIBLE))
+                .doOnSubscribe(disposable1 -> shouldClosePrBar(false))
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
-                .filter(charSequence -> {
-                    if (TextUtils.isEmpty(charSequence)) {
+                .map(chars -> chars.toString().trim())
+                .filter(text -> {
+                    if (TextUtils.isEmpty(text)) {
                         charSequenceLength = 0;
                         repoPresenter.loadDefaultRepos();
                     }
-                    return !TextUtils.isEmpty(charSequence);
+                    return !TextUtils.isEmpty(text);
                 })
-                .subscribe(charSequence -> {
-                    if (charSequence.length() != charSequenceLength) {
+                .subscribe(text -> {
+                    if (text.length() != charSequenceLength) {
                         repoPresenter.clearRepoPayload();
-                        charSequenceLength = charSequence.length();
+                        charSequenceLength = text.length();
                     }
-                    repoPresenter.searchRepos(charSequence.toString());
+                    repoPresenter.searchRepos(text);
                     repoAdapter.setOnReachEndListener(() -> {
-                                progressBar.setVisibility(View.VISIBLE);
-                                repoPresenter.searchRepos(charSequence.toString());
+                                repoPresenter.searchRepos(text);
                             }
                     );
                 }, throwable -> {
