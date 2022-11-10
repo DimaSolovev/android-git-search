@@ -26,6 +26,7 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
 
     private IssueAdapter issueAdapter;
     private ProgressBar progressBarIssue;
+    private RepoPresenter repoPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +54,18 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         issueAdapter = new IssueAdapter();
         RecyclerView issueRecyclerView = findViewById(R.id.issueRecyclerView);
         issueRecyclerView.setAdapter(issueAdapter);
-        RepoPresenter repoPresenter = new RepoPresenter(RepoDetailActivity.this);
+        repoPresenter = new RepoPresenter(RepoDetailActivity.this);
         progressBarIssue.setVisibility(View.VISIBLE);
         repoPresenter.getIssues(repo.getOwner().getLogin(), repo.getName());
     }
 
-    public static Intent newIntent(Context context){
+    public static Intent newIntent(Context context) {
         return new Intent(context, RepoDetailActivity.class);
     }
 
     @Override
-    public void showReposOnUI(RepoPayload repoPayload) {}
+    public void showReposOnUI(RepoPayload repoPayload) {
+    }
 
     @Override
     public void showErrorOnUI(int resId) {
@@ -83,5 +85,11 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
     @Override
     public void showProgressBar() {
         progressBarIssue.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        repoPresenter.onStop();
     }
 }

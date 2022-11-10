@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         progressBar.setVisibility(View.VISIBLE);
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
-                .debounce(300, TimeUnit.MILLISECONDS)
+                .debounce(200, TimeUnit.MILLISECONDS)
                 .filter(charSequence -> {
                     if (TextUtils.isEmpty(charSequence)) {
                         charSequenceLength = 0;
