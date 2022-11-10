@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
@@ -27,11 +26,8 @@ import com.jakewharton.rxbinding3.appcompat.RxSearchView;
 
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements IActivity {
 
@@ -81,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
                 .queryTextChanges(searchView)
                 .doOnSubscribe(disposable1 -> progressBar.setVisibility(View.VISIBLE))
                 .debounce(400, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
                 .filter(charSequence -> {
                     if (TextUtils.isEmpty(charSequence)) {
                         charSequenceLength = 0;
