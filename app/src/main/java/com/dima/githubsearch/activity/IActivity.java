@@ -10,9 +10,4 @@ public interface IActivity {
     void showErrorOnUI(int resId);
 
     void showIssueOnUI(IssuePayload issuePayload);
-
-    void hideProgressBar();
-
-    void showProgressBar();
-
 }

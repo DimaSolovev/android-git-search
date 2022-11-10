@@ -1,5 +1,8 @@
 package com.dima.githubsearch.presenter;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.activity.IActivity;
 import com.dima.githubsearch.api.ApiFactory;
@@ -18,6 +21,11 @@ public class RepoPresenter {
     private final CompositeDisposable compositeDisposable;
     private final RepoPayload repoPayload = new RepoPayload();
     private int page = 1;
+    private MutableLiveData<Boolean> shouldClosePrBar = new MutableLiveData();
+
+    public LiveData<Boolean> getShouldClosePrBar() {
+        return shouldClosePrBar;
+    }
 
     public RepoPresenter(IActivity iActivity) {
         mIActivity = iActivity;
@@ -36,10 +44,10 @@ public class RepoPresenter {
                 .searchRepos(q, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doAfterTerminate(mIActivity::hideProgressBar)
+                .doOnSubscribe(disposable1 -> shouldClosePrBar.postValue(false))
+                .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
                 .subscribe(
                         reposPayload -> {
-                            mIActivity.showProgressBar();
                             page++;
                             repoPayload.addItems(reposPayload.getItems());
                             mIActivity.showReposOnUI(repoPayload);
@@ -60,7 +68,8 @@ public class RepoPresenter {
                     return issuePayload;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .doAfterTerminate(mIActivity::hideProgressBar)
+                .doOnSubscribe(disposable1 -> shouldClosePrBar.setValue(false))
+                .doAfterTerminate(() -> shouldClosePrBar.setValue(true))
                 .subscribe(
                         mIActivity::showIssueOnUI,
                         throwable -> mIActivity.showErrorOnUI(R.string.error_issue_limit)
@@ -80,14 +89,11 @@ public class RepoPresenter {
                     return reposPayload;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(repoPayload -> {
-                            mIActivity.hideProgressBar();
-                            mIActivity.showReposOnUI(repoPayload);
-                        },
-                        throwable -> {
-                            mIActivity.hideProgressBar();
-                            mIActivity.showErrorOnUI(R.string.error_default_repo);
-                        }
+                .doOnSubscribe(disposable1 -> shouldClosePrBar.postValue(false))
+                .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
+                .subscribe(
+                        mIActivity::showReposOnUI,
+                        throwable -> mIActivity.showErrorOnUI(R.string.error_default_repo)
                 );
         compositeDisposable.add(disposable);
     }

@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
             intent.putExtra("repo", new Gson().toJson(repoAdapter.getReposPayload().getItems().get(id)));
             startActivity(intent);
         });
+        repoPresenter.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
     }
 
     @Override
@@ -117,19 +118,17 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void hideProgressBar() {
-        progressBar.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void showProgressBar() {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
         repoPresenter.onStop();
+    }
+
+    private void shouldClosePrBar(Boolean shouldClose){
+        if(shouldClose){
+            progressBar.setVisibility(View.INVISIBLE);
+        }else {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 }

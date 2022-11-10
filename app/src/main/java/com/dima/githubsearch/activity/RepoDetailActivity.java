@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
@@ -55,7 +54,7 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         RecyclerView issueRecyclerView = findViewById(R.id.issueRecyclerView);
         issueRecyclerView.setAdapter(issueAdapter);
         repoPresenter = new RepoPresenter(RepoDetailActivity.this);
-        progressBarIssue.setVisibility(View.VISIBLE);
+        repoPresenter.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
         repoPresenter.getIssues(repo.getOwner().getLogin(), repo.getName());
     }
 
@@ -78,18 +77,16 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void hideProgressBar() {
-        progressBarIssue.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void showProgressBar() {
-        progressBarIssue.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         repoPresenter.onStop();
+    }
+
+    private void shouldClosePrBar(Boolean shouldClose){
+        if(shouldClose){
+            progressBarIssue.setVisibility(View.INVISIBLE);
+        }else {
+            progressBarIssue.setVisibility(View.VISIBLE);
+        }
     }
 }
