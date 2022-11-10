@@ -27,8 +27,11 @@ import com.jakewharton.rxbinding3.appcompat.RxSearchView;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements IActivity {
 
@@ -73,10 +76,11 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     public void registerToSearchViewEvents(SearchView searchView) {
-        progressBar.setVisibility(View.VISIBLE);
+
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
-                .debounce(200, TimeUnit.MILLISECONDS)
+                .doOnSubscribe(disposable1 -> progressBar.setVisibility(View.VISIBLE))
+                .debounce(400, TimeUnit.MILLISECONDS)
                 .filter(charSequence -> {
                     if (TextUtils.isEmpty(charSequence)) {
                         charSequenceLength = 0;

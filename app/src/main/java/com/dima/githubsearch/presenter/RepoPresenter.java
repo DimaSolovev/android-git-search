@@ -9,6 +9,7 @@ import com.dima.githubsearch.models.RepoPayload;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 public class RepoPresenter {
@@ -36,18 +37,15 @@ public class RepoPresenter {
                 .searchRepos(q, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doAfterTerminate(mIActivity::hideProgressBar)
                 .subscribe(
                         reposPayload -> {
                             mIActivity.showProgressBar();
                             page++;
                             repoPayload.addItems(reposPayload.getItems());
                             mIActivity.showReposOnUI(repoPayload);
-                            mIActivity.hideProgressBar();
                         },
-                        throwable -> {
-                            mIActivity.hideProgressBar();
-                            mIActivity.showErrorOnUI(R.string.error_rate_limit);
-                        }
+                        throwable -> mIActivity.showErrorOnUI(R.string.error_repo_limit)
                 );
         compositeDisposable.add(disposable);
     }
@@ -63,14 +61,10 @@ public class RepoPresenter {
                     return issuePayload;
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(issuePayload -> {
-                            mIActivity.showIssueOnUI(issuePayload);
-                            mIActivity.hideProgressBar();
-                        },
-                        throwable -> {
-                            mIActivity.hideProgressBar();
-                            mIActivity.showErrorOnUI(R.string.error_rate_limit);
-                        }
+                .doAfterTerminate(mIActivity::hideProgressBar)
+                .subscribe(
+                        mIActivity::showIssueOnUI,
+                        throwable -> mIActivity.showErrorOnUI(R.string.error_issue_limit)
                 );
         compositeDisposable.add(disposable);
     }
