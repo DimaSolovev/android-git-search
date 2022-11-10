@@ -13,7 +13,7 @@ import retrofit2.http.Query;
 
 public interface ApiService {
 
-    @GET("search/repositories")
+    @GET("search/repositories?per_page=100")
     Observable<RepoPayload> searchRepos(
             @Query("q") String query,
             @Query("page") int page
