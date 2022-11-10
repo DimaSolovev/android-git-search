@@ -81,11 +81,11 @@ public class MainActivity extends AppCompatActivity implements IActivity {
                 .distinctUntilChanged()
                 .map(chars -> chars.toString().trim())
                 .filter(text -> {
-                    if (TextUtils.isEmpty(text)) {
+                    if (text.isEmpty()) {
                         charSequenceLength = 0;
                         repoPresenter.loadDefaultRepos();
                     }
-                    return !TextUtils.isEmpty(text);
+                    return !text.isEmpty();
                 })
                 .subscribe(text -> {
                     if (text.length() != charSequenceLength) {
