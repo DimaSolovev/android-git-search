@@ -1,8 +1,12 @@
 package com.dima.githubsearch.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class User {
 
+    @SerializedName("login")
     private String login;
+    @SerializedName("avatar_url")
     private String avatarUrl;
 
     public String getLogin() {

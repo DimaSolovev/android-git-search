@@ -1,9 +1,14 @@
 package com.dima.githubsearch.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Issue {
 
+    @SerializedName("title")
     private String title;
+    @SerializedName("state")
     private String state;
+    @SerializedName("created_at")
     private String createdAt;
 
     public String getTitle() {
