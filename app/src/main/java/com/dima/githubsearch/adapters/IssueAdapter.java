@@ -24,7 +24,7 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
     @Override
     public IssueViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.issue_item, parent, false);
-        return new IssueAdapter.IssueViewHolder(view);
+        return new IssueViewHolder(view);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
         return issuePayload.getItems().size();
     }
 
-    class IssueViewHolder extends RecyclerView.ViewHolder {
+    static class IssueViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView textViewIssueTitle;
         private final TextView textViewIssueCreatedAt;

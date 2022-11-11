@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
                 .doOnSubscribe(disposable1 -> shouldClosePrBar(false))
-                .debounce(400, TimeUnit.MILLISECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
                 .map(chars -> chars.toString().trim())
                 .filter(text -> {
