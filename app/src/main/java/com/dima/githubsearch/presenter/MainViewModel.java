@@ -98,7 +98,10 @@ public class MainViewModel extends AndroidViewModel {
                 .doOnSubscribe(disposable1 -> shouldClosePrBar.postValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
                 .subscribe(
-                        repos::setValue
+                        repoListFromNet -> {
+                            repos.setValue(repoListFromNet);
+                            page = 1;
+                        }
                         , throwable -> Toast.makeText(
                                 getApplication(),
                                 R.string.error_default_repo,
