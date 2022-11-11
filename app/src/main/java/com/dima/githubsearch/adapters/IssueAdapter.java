@@ -1,5 +1,6 @@
 package com.dima.githubsearch.adapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,12 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
     public void onBindViewHolder(@NonNull IssueViewHolder holder, int position) {
         holder.textViewIssueTitle.setText(issuePayload.getItems().get(position).getTitle());
         holder.textViewIssueCreatedAt.setText(issuePayload.getItems().get(position).getCreatedAt());
+        String state = issuePayload.getItems().get(position).getState();
+        if(state.equals("open")){
+            holder.textViewIssueStatus.setTextColor(Color.RED);
+        }else {
+            holder.textViewIssueStatus.setTextColor(Color.GREEN);
+        }
         holder.textViewIssueStatus.setText(issuePayload.getItems().get(position).getState());
     }
 
