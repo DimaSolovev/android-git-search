@@ -61,17 +61,15 @@ public class MainViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable1 -> shouldClosePrBar.postValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
-                .doOnError(throwable -> Toast.makeText(
-                        getApplication(),
-                        R.string.error_repo_limit,
-                        Toast.LENGTH_LONG).show())
                 .subscribe(
                         reposPayload -> {
                             page++;
                             repoList.addAll(reposPayload.getItems());
                             repos.setValue(repoList);
-                        }
-                );
+                        }, throwable -> Toast.makeText(
+                                getApplication(),
+                                R.string.error_repo_limit,
+                                Toast.LENGTH_LONG).show());
         compositeDisposable.add(disposable);
     }
 
@@ -82,13 +80,12 @@ public class MainViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable1 -> shouldClosePrBar.setValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.setValue(true))
-                .doOnError(throwable -> Toast.makeText(
-                        getApplication(),
-                        R.string.error_repo_limit,
-                        Toast.LENGTH_LONG).show())
                 .subscribe(
                         issues::setValue
-                );
+                        , throwable -> Toast.makeText(
+                                getApplication(),
+                                R.string.error_issue_limit,
+                                Toast.LENGTH_LONG).show());
         compositeDisposable.add(disposable);
     }
 
@@ -100,13 +97,12 @@ public class MainViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable1 -> shouldClosePrBar.postValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
-                .doOnError(throwable -> Toast.makeText(
-                        getApplication(),
-                        R.string.error_default_repo,
-                        Toast.LENGTH_LONG).show())
                 .subscribe(
                         repos::setValue
-                );
+                        , throwable -> Toast.makeText(
+                                getApplication(),
+                                R.string.error_default_repo,
+                                Toast.LENGTH_LONG).show());
         compositeDisposable.add(disposable);
     }
 
