@@ -1,6 +1,5 @@
 package com.dima.githubsearch.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.models.Repo;
-import com.dima.githubsearch.models.RepoPayload;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,13 +19,8 @@ import java.util.List;
 public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
 
     private List<Repo> repoList = new ArrayList<>();
-    private Context context;
     private OnReachEndListener onReachEndListener;
     private OnClickListener onClickListener;
-
-    public RepoAdapter(Context context) {
-        this.context = context;
-    }
 
     public interface OnReachEndListener {
         void onReachEnd();
@@ -69,7 +62,7 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
                 .into(holder.imageViewAvatar);
         holder.textViewRepositoryName.setText(repo.getFullName());
         holder.textViewRepositoryDescription.setText(repo.getDescription());
-        if (position == repoList.size() - 1 && onReachEndListener != null) {
+        if (position == repoList.size() - 1 && onReachEndListener != null && repoList.size() > 10) {
             onReachEndListener.onReachEnd();
         }
     }

@@ -17,5 +17,4 @@ public class IssuePayload {
     public void setItems(List<Issue> items) {
         this.items = items;
     }
-
 }

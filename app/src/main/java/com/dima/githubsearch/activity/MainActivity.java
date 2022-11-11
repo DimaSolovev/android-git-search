@@ -1,10 +1,7 @@
 package com.dima.githubsearch.activity;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -15,14 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.RepoAdapter;
-import com.dima.githubsearch.models.IssuePayload;
 import com.dima.githubsearch.models.Repo;
-import com.dima.githubsearch.models.RepoPayload;
-import com.dima.githubsearch.presenter.RepoPresenter;
+import com.dima.githubsearch.presenter.MainViewModel;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding3.appcompat.RxSearchView;
 
@@ -32,9 +28,9 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class MainActivity extends AppCompatActivity implements IActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private RepoPresenter repoPresenter;
+    private MainViewModel viewModel;
     private CompositeDisposable compositeDisposable;
     private RepoAdapter repoAdapter;
     public ProgressBar progressBar;
@@ -48,17 +44,17 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         progressBar = findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
-        repoAdapter = new RepoAdapter(MainActivity.this);
+        repoAdapter = new RepoAdapter();
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setAdapter(repoAdapter);
-        repoPresenter = new RepoPresenter(MainActivity.this);
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         repoAdapter.setOnClickListener(id -> {
             Intent intent = RepoDetailActivity.newIntent(MainActivity.this);
             intent.putExtra("repo", new Gson().toJson(repoAdapter.getRepoList().get(id)));
             startActivity(intent);
         });
-        repoPresenter.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
-        repoPresenter.getRepos().observe(this, new Observer<List<Repo>>() {
+        viewModel.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
+        viewModel.getRepos().observe(this, new Observer<List<Repo>>() {
             @Override
             public void onChanged(List<Repo> repoList) {
                 repoAdapter.updateList(repoList);
@@ -70,14 +66,9 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView;
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        if (searchManager != null) {
-            searchView.setSearchableInfo(
-                    searchManager.getSearchableInfo(getComponentName()));
-            registerToSearchViewEvents(searchView);
-        }
+        registerToSearchViewEvents(searchView);
         return true;
     }
 
@@ -92,18 +83,18 @@ public class MainActivity extends AppCompatActivity implements IActivity {
                 .filter(text -> {
                     if (text.isEmpty()) {
                         charSequenceLength = 0;
-                        repoPresenter.loadDefaultRepos();
+                        viewModel.loadDefaultRepos();
                     }
                     return !text.isEmpty();
                 })
                 .subscribe(text -> {
                     if (text.length() != charSequenceLength) {
-                        repoPresenter.clearRepoPayload();
+                        viewModel.clearRepoPayload();
                         charSequenceLength = text.length();
                     }
-                    repoPresenter.searchRepos(text);
+                    viewModel.searchRepos(text);
                     repoAdapter.setOnReachEndListener(() -> {
-                                repoPresenter.searchRepos(text);
+                                viewModel.searchRepos(text);
                             }
                     );
                 }, throwable -> {
@@ -113,15 +104,9 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showErrorOnUI(int resId) {
-        Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
-        repoPresenter.onStop();
     }
 
     private void shouldClosePrBar(Boolean shouldClose) {

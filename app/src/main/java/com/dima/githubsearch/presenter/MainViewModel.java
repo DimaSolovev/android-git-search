@@ -1,11 +1,16 @@
 package com.dima.githubsearch.presenter;
 
+import android.app.Application;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dima.githubsearch.R;
-import com.dima.githubsearch.activity.IActivity;
 import com.dima.githubsearch.api.ApiFactory;
+import com.dima.githubsearch.api.ApiService;
 import com.dima.githubsearch.models.Issue;
 import com.dima.githubsearch.models.Repo;
 
@@ -17,15 +22,19 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class RepoPresenter {
+public class MainViewModel extends AndroidViewModel {
 
-    private final ApiFactory apiFactory;
-    private final IActivity mIActivity;
-    private final CompositeDisposable compositeDisposable;
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
+    ApiService apiService = ApiFactory.getInstance().getApiService();
     private int page = 1;
-    private MutableLiveData<Boolean> shouldClosePrBar = new MutableLiveData();
-    private MutableLiveData<List<Repo>> repos = new MutableLiveData();
-    private MutableLiveData<List<Issue>> issues = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> shouldClosePrBar = new MutableLiveData();
+    private final MutableLiveData<List<Repo>> repos = new MutableLiveData();
+    private final MutableLiveData<List<Issue>> issues = new MutableLiveData<>();
+    private final List<Repo> repoList = new ArrayList<>();
+
+    public MainViewModel(@NonNull Application application) {
+        super(application);
+    }
 
     public LiveData<Boolean> getShouldClosePrBar() {
         return shouldClosePrBar;
@@ -39,69 +48,71 @@ public class RepoPresenter {
         return issues;
     }
 
-    public RepoPresenter(IActivity iActivity) {
-        mIActivity = iActivity;
-        compositeDisposable = new CompositeDisposable();
-        apiFactory = ApiFactory.getInstance();
-    }
-
     public void clearRepoPayload() {
         page = 1;
+        repoList.clear();
         repos.postValue(new ArrayList<>());
     }
 
     public void searchRepos(String q) {
-        Disposable disposable = apiFactory
-                .getApiService()
+        Disposable disposable = apiService
                 .searchRepos(q, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable1 -> shouldClosePrBar.postValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
+                .doOnError(throwable -> Toast.makeText(
+                        getApplication(),
+                        R.string.error_repo_limit,
+                        Toast.LENGTH_LONG).show())
                 .subscribe(
                         reposPayload -> {
                             page++;
-                            repos.setValue(reposPayload.getItems());
-                        },
-                        throwable -> mIActivity.showErrorOnUI(R.string.error_repo_limit)
+                            repoList.addAll(reposPayload.getItems());
+                            repos.setValue(repoList);
+                        }
                 );
         compositeDisposable.add(disposable);
     }
 
     public void getIssues(String userName, String repoName) {
-        Disposable disposable = apiFactory
-                .getApiService()
+        Disposable disposable = apiService
                 .getIssues(userName, repoName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable1 -> shouldClosePrBar.setValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.setValue(true))
+                .doOnError(throwable -> Toast.makeText(
+                        getApplication(),
+                        R.string.error_repo_limit,
+                        Toast.LENGTH_LONG).show())
                 .subscribe(
-                        issuesFromNet -> {
-                            issues.setValue(issuesFromNet);
-                        },
-                        throwable -> mIActivity.showErrorOnUI(R.string.error_issue_limit)
+                        issues::setValue
                 );
         compositeDisposable.add(disposable);
     }
 
     public void loadDefaultRepos() {
 
-        Disposable disposable = apiFactory
-                .getApiService()
+        Disposable disposable = apiService
                 .getRepos()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable1 -> shouldClosePrBar.postValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
+                .doOnError(throwable -> Toast.makeText(
+                        getApplication(),
+                        R.string.error_default_repo,
+                        Toast.LENGTH_LONG).show())
                 .subscribe(
-                        repoList -> repos.setValue(repoList),
-                        throwable -> mIActivity.showErrorOnUI(R.string.error_default_repo)
+                        repos::setValue
                 );
         compositeDisposable.add(disposable);
     }
 
-    public void onStop() {
+    @Override
+    protected void onCleared() {
+        super.onCleared();
         compositeDisposable.dispose();
     }
 }
