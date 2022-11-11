@@ -10,14 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
-import com.dima.githubsearch.models.IssuePayload;
+import com.dima.githubsearch.models.Issue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHolder> {
 
-    private IssuePayload issuePayload = new IssuePayload();
+    private List<Issue> issueList = new ArrayList<>();
 
-    public void updateList(IssuePayload issuePayload) {
-        this.issuePayload = issuePayload;
+    public void updateList(List<Issue> issues) {
+        issueList = issues;
         notifyDataSetChanged();
     }
 
@@ -30,20 +33,21 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
 
     @Override
     public void onBindViewHolder(@NonNull IssueViewHolder holder, int position) {
-        holder.textViewIssueTitle.setText(issuePayload.getItems().get(position).getTitle());
-        holder.textViewIssueCreatedAt.setText(issuePayload.getItems().get(position).getCreatedAt());
-        String state = issuePayload.getItems().get(position).getState();
-        if(state.equals("open")){
+        Issue issue = issueList.get(position);
+        holder.textViewIssueTitle.setText(issue.getTitle());
+        holder.textViewIssueCreatedAt.setText(issue.getCreatedAt());
+        String state = issue.getState();
+        if (state.equals("open")) {
             holder.textViewIssueStatus.setTextColor(Color.RED);
-        }else {
+        } else {
             holder.textViewIssueStatus.setTextColor(Color.GREEN);
         }
-        holder.textViewIssueStatus.setText(issuePayload.getItems().get(position).getState());
+        holder.textViewIssueStatus.setText(state);
     }
 
     @Override
     public int getItemCount() {
-        return issuePayload.getItems().size();
+        return issueList.size();
     }
 
     static class IssueViewHolder extends RecyclerView.ViewHolder {

@@ -10,16 +10,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.IssueAdapter;
+import com.dima.githubsearch.models.Issue;
 import com.dima.githubsearch.models.IssuePayload;
 import com.dima.githubsearch.models.Repo;
 import com.dima.githubsearch.models.RepoPayload;
 import com.dima.githubsearch.presenter.RepoPresenter;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 public class RepoDetailActivity extends AppCompatActivity implements IActivity {
 
@@ -56,14 +60,16 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
         repoPresenter = new RepoPresenter(RepoDetailActivity.this);
         repoPresenter.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
         repoPresenter.getIssues(repo.getOwner().getLogin(), repo.getName());
+        repoPresenter.getIssues().observe(this, new Observer<List<Issue>>() {
+            @Override
+            public void onChanged(List<Issue> issues) {
+                issueAdapter.updateList(issues);
+            }
+        });
     }
 
     public static Intent newIntent(Context context) {
         return new Intent(context, RepoDetailActivity.class);
-    }
-
-    @Override
-    public void showReposOnUI(RepoPayload repoPayload) {
     }
 
     @Override
@@ -72,20 +78,15 @@ public class RepoDetailActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showIssueOnUI(IssuePayload issuePayload) {
-        issueAdapter.updateList(issuePayload);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         repoPresenter.onStop();
     }
 
-    private void shouldClosePrBar(Boolean shouldClose){
-        if(shouldClose){
+    private void shouldClosePrBar(Boolean shouldClose) {
+        if (shouldClose) {
             progressBarIssue.setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             progressBarIssue.setVisibility(View.VISIBLE);
         }
     }

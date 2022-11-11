@@ -14,16 +14,19 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.RepoAdapter;
 import com.dima.githubsearch.models.IssuePayload;
+import com.dima.githubsearch.models.Repo;
 import com.dima.githubsearch.models.RepoPayload;
 import com.dima.githubsearch.presenter.RepoPresenter;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding3.appcompat.RxSearchView;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -51,10 +54,16 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         repoPresenter = new RepoPresenter(MainActivity.this);
         repoAdapter.setOnClickListener(id -> {
             Intent intent = RepoDetailActivity.newIntent(MainActivity.this);
-            intent.putExtra("repo", new Gson().toJson(repoAdapter.getReposPayload().getItems().get(id)));
+            intent.putExtra("repo", new Gson().toJson(repoAdapter.getRepoList().get(id)));
             startActivity(intent);
         });
         repoPresenter.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
+        repoPresenter.getRepos().observe(this, new Observer<List<Repo>>() {
+            @Override
+            public void onChanged(List<Repo> repoList) {
+                repoAdapter.updateList(repoList);
+            }
+        });
     }
 
     @Override
@@ -104,17 +113,8 @@ public class MainActivity extends AppCompatActivity implements IActivity {
     }
 
     @Override
-    public void showReposOnUI(RepoPayload repoPayload) {
-        repoAdapter.updateList(repoPayload);
-    }
-
-    @Override
     public void showErrorOnUI(int resId) {
         Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void showIssueOnUI(IssuePayload issuePayload) {
     }
 
     @Override
@@ -124,10 +124,10 @@ public class MainActivity extends AppCompatActivity implements IActivity {
         repoPresenter.onStop();
     }
 
-    private void shouldClosePrBar(Boolean shouldClose){
-        if(shouldClose){
+    private void shouldClosePrBar(Boolean shouldClose) {
+        if (shouldClose) {
             progressBar.setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             progressBar.setVisibility(View.VISIBLE);
         }
     }

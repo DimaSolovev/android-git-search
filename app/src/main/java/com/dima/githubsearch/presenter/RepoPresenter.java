@@ -1,15 +1,16 @@
 package com.dima.githubsearch.presenter;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.activity.IActivity;
 import com.dima.githubsearch.api.ApiFactory;
-import com.dima.githubsearch.models.IssuePayload;
-import com.dima.githubsearch.models.RepoPayload;
+import com.dima.githubsearch.models.Issue;
+import com.dima.githubsearch.models.Repo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -21,12 +22,21 @@ public class RepoPresenter {
     private final ApiFactory apiFactory;
     private final IActivity mIActivity;
     private final CompositeDisposable compositeDisposable;
-    private final RepoPayload repoPayload = new RepoPayload();
     private int page = 1;
     private MutableLiveData<Boolean> shouldClosePrBar = new MutableLiveData();
+    private MutableLiveData<List<Repo>> repos = new MutableLiveData();
+    private MutableLiveData<List<Issue>> issues = new MutableLiveData<>();
 
     public LiveData<Boolean> getShouldClosePrBar() {
         return shouldClosePrBar;
+    }
+
+    public MutableLiveData<List<Repo>> getRepos() {
+        return repos;
+    }
+
+    public MutableLiveData<List<Issue>> getIssues() {
+        return issues;
     }
 
     public RepoPresenter(IActivity iActivity) {
@@ -37,7 +47,7 @@ public class RepoPresenter {
 
     public void clearRepoPayload() {
         page = 1;
-        repoPayload.clearItems();
+        repos.postValue(new ArrayList<>());
     }
 
     public void searchRepos(String q) {
@@ -51,8 +61,7 @@ public class RepoPresenter {
                 .subscribe(
                         reposPayload -> {
                             page++;
-                            repoPayload.addItems(reposPayload.getItems());
-                            mIActivity.showReposOnUI(repoPayload);
+                            repos.setValue(reposPayload.getItems());
                         },
                         throwable -> mIActivity.showErrorOnUI(R.string.error_repo_limit)
                 );
@@ -64,16 +73,13 @@ public class RepoPresenter {
                 .getApiService()
                 .getIssues(userName, repoName)
                 .subscribeOn(Schedulers.io())
-                .map(issues -> {
-                    IssuePayload issuePayload = new IssuePayload();
-                    issuePayload.setItems(issues);
-                    return issuePayload;
-                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable1 -> shouldClosePrBar.setValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.setValue(true))
                 .subscribe(
-                        mIActivity::showIssueOnUI,
+                        issuesFromNet -> {
+                            issues.setValue(issuesFromNet);
+                        },
                         throwable -> mIActivity.showErrorOnUI(R.string.error_issue_limit)
                 );
         compositeDisposable.add(disposable);
@@ -85,16 +91,11 @@ public class RepoPresenter {
                 .getApiService()
                 .getRepos()
                 .subscribeOn(Schedulers.io())
-                .map(repos -> {
-                    RepoPayload reposPayload = new RepoPayload();
-                    reposPayload.setItems(repos);
-                    return reposPayload;
-                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable1 -> shouldClosePrBar.postValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
                 .subscribe(
-                        mIActivity::showReposOnUI,
+                        repoList -> repos.setValue(repoList),
                         throwable -> mIActivity.showErrorOnUI(R.string.error_default_repo)
                 );
         compositeDisposable.add(disposable);

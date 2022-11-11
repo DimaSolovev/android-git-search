@@ -11,19 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
+import com.dima.githubsearch.models.Repo;
 import com.dima.githubsearch.models.RepoPayload;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
 
-    private RepoPayload mRepoPayload;
+    private List<Repo> repoList = new ArrayList<>();
     private Context context;
     private OnReachEndListener onReachEndListener;
     private OnClickListener onClickListener;
 
     public RepoAdapter(Context context) {
         this.context = context;
-        mRepoPayload = new RepoPayload();
     }
 
     public interface OnReachEndListener {
@@ -42,13 +45,13 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
         this.onClickListener = onClickListener;
     }
 
-    public void updateList(RepoPayload repoPayload) {
-        mRepoPayload = repoPayload;
+    public void updateList(List<Repo> repos) {
+        repoList = repos;
         notifyDataSetChanged();
     }
 
-    public RepoPayload getReposPayload() {
-        return mRepoPayload;
+    public List<Repo> getRepoList() {
+        return repoList;
     }
 
     @NonNull
@@ -60,19 +63,20 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RepoViewHolder holder, int position) {
-        Picasso.get().load(mRepoPayload.getItems().get(position).getOwner().getAvatarUrl())
+        Repo repo = repoList.get(position);
+        Picasso.get().load(repo.getOwner().getAvatarUrl())
                 .placeholder(R.drawable.def)
                 .into(holder.imageViewAvatar);
-        holder.textViewRepositoryName.setText(mRepoPayload.getItems().get(position).getFullName());
-        holder.textViewRepositoryDescription.setText(mRepoPayload.getItems().get(position).getDescription());
-        if (position == mRepoPayload.getItems().size() - 1 && onReachEndListener != null) {
+        holder.textViewRepositoryName.setText(repo.getFullName());
+        holder.textViewRepositoryDescription.setText(repo.getDescription());
+        if (position == repoList.size() - 1 && onReachEndListener != null) {
             onReachEndListener.onReachEnd();
         }
     }
 
     @Override
     public int getItemCount() {
-        return mRepoPayload.getItems().size();
+        return repoList.size();
     }
 
     class RepoViewHolder extends RecyclerView.ViewHolder {
