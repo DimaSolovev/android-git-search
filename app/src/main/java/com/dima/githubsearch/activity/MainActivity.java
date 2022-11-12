@@ -76,16 +76,13 @@ public class MainActivity extends AppCompatActivity {
 
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
-                .doOnSubscribe(disposable1 -> shouldClosePrBar(false))
                 .debounce(500, TimeUnit.MILLISECONDS)
-                .distinctUntilChanged()
-                .map(chars -> chars.toString().trim())
+                .map(CharSequence::toString)
                 .filter(text -> {
-                    if (text.isEmpty()) {
-                        charSequenceLength = 0;
-                        viewModel.loadDefaultRepos();
+                    if(text.isEmpty()){
+                        viewModel.clearRepoPayload();
                     }
-                    return !text.isEmpty();
+                   return  !text.isEmpty();
                 })
                 .subscribe(text -> {
                     if (text.length() != charSequenceLength) {
@@ -93,9 +90,7 @@ public class MainActivity extends AppCompatActivity {
                         charSequenceLength = text.length();
                     }
                     viewModel.searchRepos(text);
-                    repoAdapter.setOnReachEndListener(() -> {
-                                viewModel.searchRepos(text);
-                            }
+                    repoAdapter.setOnReachEndListener(() -> viewModel.searchRepos(text)
                     );
                 }, throwable -> {
                     Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();

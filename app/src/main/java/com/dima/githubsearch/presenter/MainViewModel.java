@@ -40,11 +40,11 @@ public class MainViewModel extends AndroidViewModel {
         return shouldClosePrBar;
     }
 
-    public MutableLiveData<List<Repo>> getRepos() {
+    public LiveData<List<Repo>> getRepos() {
         return repos;
     }
 
-    public MutableLiveData<List<Issue>> getIssues() {
+    public LiveData<List<Issue>> getIssues() {
         return issues;
     }
 
@@ -85,26 +85,6 @@ public class MainViewModel extends AndroidViewModel {
                         , throwable -> Toast.makeText(
                                 getApplication(),
                                 R.string.error_issue_limit,
-                                Toast.LENGTH_LONG).show());
-        compositeDisposable.add(disposable);
-    }
-
-    public void loadDefaultRepos() {
-
-        Disposable disposable = apiService
-                .getRepos()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable1 -> shouldClosePrBar.postValue(false))
-                .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
-                .subscribe(
-                        repoListFromNet -> {
-                            repos.setValue(repoListFromNet);
-                            page = 1;
-                        }
-                        , throwable -> Toast.makeText(
-                                getApplication(),
-                                R.string.error_default_repo,
                                 Toast.LENGTH_LONG).show());
         compositeDisposable.add(disposable);
     }
