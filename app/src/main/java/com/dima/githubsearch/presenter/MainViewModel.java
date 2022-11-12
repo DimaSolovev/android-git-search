@@ -59,7 +59,7 @@ public class MainViewModel extends AndroidViewModel {
                 .searchRepos(q, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable1 -> shouldClosePrBar.postValue(false))
+                .doOnSubscribe(scheduler -> shouldClosePrBar.postValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
                 .subscribe(
                         reposPayload -> {
@@ -78,7 +78,7 @@ public class MainViewModel extends AndroidViewModel {
                 .getIssues(userName, repoName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable1 -> shouldClosePrBar.setValue(false))
+                .doOnSubscribe(scheduler -> shouldClosePrBar.setValue(false))
                 .doAfterTerminate(() -> shouldClosePrBar.setValue(true))
                 .subscribe(
                         issues::setValue

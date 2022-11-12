@@ -27,6 +27,7 @@ public class RepoDetailActivity extends AppCompatActivity {
 
     private IssueAdapter issueAdapter;
     private ProgressBar progressBarIssue;
+    private static final String REPO = "repo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,8 @@ public class RepoDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String reposJSON = null;
-        if (intent != null && intent.hasExtra("repo")) {
-            reposJSON = intent.getStringExtra("repo");
+        if (intent != null && intent.hasExtra(REPO)) {
+            reposJSON = intent.getStringExtra(REPO);
         } else {
             finish();
         }

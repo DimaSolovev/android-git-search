@@ -11,18 +11,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.RepoAdapter;
-import com.dima.githubsearch.models.Repo;
 import com.dima.githubsearch.presenter.MainViewModel;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding3.appcompat.RxSearchView;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -30,6 +27,7 @@ import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String REPO = "repo";
     private MainViewModel viewModel;
     private CompositeDisposable compositeDisposable;
     private RepoAdapter repoAdapter;
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         repoAdapter.setOnClickListener(id -> {
             Intent intent = RepoDetailActivity.newIntent(MainActivity.this);
-            intent.putExtra("repo", new Gson().toJson(repoAdapter.getRepoList().get(id)));
+            intent.putExtra(REPO, new Gson().toJson(repoAdapter.getRepoList().get(id)));
             startActivity(intent);
         });
         viewModel.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
