@@ -30,4 +30,17 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/textViewIssueNotFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_issue_found"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/issueRecyclerView"
+        app:layout_constraintEnd_toEndOf="@+id/issueRecyclerView"
+        app:layout_constraintStart_toStartOf="@+id/issueRecyclerView"
+        app:layout_constraintTop_toTopOf="@+id/issueRecyclerView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

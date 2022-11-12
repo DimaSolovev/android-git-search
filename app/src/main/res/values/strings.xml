@@ -10,4 +10,5 @@
     <string name="created_at">Created at:</string>
     <string name="status">Status:</string>
     <string name="title">Title:</string>
+    <string name="no_issue_found">No issue found</string>
 </resources>

@@ -28,6 +28,7 @@ public class RepoDetailActivity extends AppCompatActivity {
     private IssueAdapter issueAdapter;
     private ProgressBar progressBarIssue;
     private static final String REPO = "repo";
+    private TextView textViewIssueNotFound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class RepoDetailActivity extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.imageView);
         TextView textViewRepoName = findViewById(R.id.textViewRepoName);
         TextView textViewRepoDescription = findViewById(R.id.textViewRepoDescription);
+        textViewIssueNotFound = findViewById(R.id.textViewIssueNotFound);
 
         Intent intent = getIntent();
         String reposJSON = null;
@@ -58,7 +60,12 @@ public class RepoDetailActivity extends AppCompatActivity {
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
         viewModel.getIssues(repo.getOwner().getLogin(), repo.getName());
-        viewModel.getIssues().observe(this, issues -> issueAdapter.updateList(issues));
+        viewModel.getIssues().observe(this, issues -> {
+            if (issues.isEmpty()) {
+                textViewIssueNotFound.setVisibility(View.VISIBLE);
+            }
+            issueAdapter.updateList(issues);
+        });
     }
 
     public static Intent newIntent(Context context) {
