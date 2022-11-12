@@ -73,13 +73,15 @@ public class MainActivity extends AppCompatActivity {
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
                 .debounce(300, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
                 .map(chars -> chars.toString().trim())
                 .distinctUntilChanged()
                 .filter(text -> {
                     if (text.isEmpty()) {
                         viewModel.clearRepoPayload();
+                        return false;
                     }
-                    return !text.isEmpty();
+                    return true;
                 })
                 .subscribe(text -> {
                     if (text.length() != charSequenceLength) {
