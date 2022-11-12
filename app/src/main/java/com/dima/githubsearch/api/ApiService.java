@@ -1,7 +1,6 @@
 package com.dima.githubsearch.api;
 
 import com.dima.githubsearch.models.Issue;
-import com.dima.githubsearch.models.Repo;
 import com.dima.githubsearch.models.RepoPayload;
 
 import java.util.List;
@@ -25,8 +24,4 @@ public interface ApiService {
             @Path("user") String user,
             @Path("repo") String repo
     );
-
-    @GET("repositories")
-    Observable<List<Repo>> getRepos();
-
 }

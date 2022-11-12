@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         compositeDisposable = new CompositeDisposable();
         Toolbar toolbar = findViewById(R.id.toolbar);
         progressBar = findViewById(R.id.progressBar);
@@ -54,12 +55,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
         viewModel.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
-        viewModel.getRepos().observe(this, new Observer<List<Repo>>() {
-            @Override
-            public void onChanged(List<Repo> repoList) {
-                repoAdapter.updateList(repoList);
-            }
-        });
+        viewModel.getRepos().observe(this, repoList -> repoAdapter.updateList(repoList));
     }
 
     @Override
@@ -76,13 +72,14 @@ public class MainActivity extends AppCompatActivity {
 
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .map(CharSequence::toString)
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .map(chars -> chars.toString().trim())
+                .distinctUntilChanged()
                 .filter(text -> {
-                    if(text.isEmpty()){
+                    if (text.isEmpty()) {
                         viewModel.clearRepoPayload();
                     }
-                   return  !text.isEmpty();
+                    return !text.isEmpty();
                 })
                 .subscribe(text -> {
                     if (text.length() != charSequenceLength) {

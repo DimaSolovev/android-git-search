@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -49,7 +48,7 @@ public class RepoDetailActivity extends AppCompatActivity {
         Repo repo = new Gson().fromJson(reposJSON, Repo.class);
 
         Picasso.get().load(repo.getOwner().getAvatarUrl()).placeholder(R.drawable.def).into(imageView);
-        textViewRepoName.setText(repo.getName());
+        textViewRepoName.setText(repo.getFullName());
         textViewRepoDescription.setText(repo.getDescription());
 
         issueAdapter = new IssueAdapter();
@@ -58,12 +57,7 @@ public class RepoDetailActivity extends AppCompatActivity {
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
         viewModel.getIssues(repo.getOwner().getLogin(), repo.getName());
-        viewModel.getIssues().observe(this, new Observer<List<Issue>>() {
-            @Override
-            public void onChanged(List<Issue> issues) {
-                issueAdapter.updateList(issues);
-            }
-        });
+        viewModel.getIssues().observe(this, issues -> issueAdapter.updateList(issues));
     }
 
     public static Intent newIntent(Context context) {
