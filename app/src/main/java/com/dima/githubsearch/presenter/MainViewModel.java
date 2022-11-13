@@ -27,7 +27,7 @@ public class MainViewModel extends AndroidViewModel {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     ApiService apiService = ApiFactory.getInstance().getApiService();
     private int page = 1;
-    private final MutableLiveData<Boolean> shouldClosePrBar = new MutableLiveData();
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData(false);
     private final MutableLiveData<List<Repo>> repos = new MutableLiveData();
     private final MutableLiveData<List<Issue>> issues = new MutableLiveData<>();
     private final List<Repo> repoList = new ArrayList<>();
@@ -36,8 +36,8 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public LiveData<Boolean> getShouldClosePrBar() {
-        return shouldClosePrBar;
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
     }
 
     public LiveData<List<Repo>> getRepos() {
@@ -59,8 +59,8 @@ public class MainViewModel extends AndroidViewModel {
                 .searchRepos(q, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(scheduler -> shouldClosePrBar.postValue(false))
-                .doAfterTerminate(() -> shouldClosePrBar.postValue(true))
+                .doOnSubscribe(scheduler -> isLoading.postValue(true))
+                .doAfterTerminate(() -> isLoading.postValue(false))
                 .subscribe(
                         reposPayload -> {
                             page++;
@@ -78,8 +78,8 @@ public class MainViewModel extends AndroidViewModel {
                 .getIssues(userName, repoName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(scheduler -> shouldClosePrBar.setValue(false))
-                .doAfterTerminate(() -> shouldClosePrBar.setValue(true))
+                .doOnSubscribe(scheduler -> isLoading.setValue(true))
+                .doAfterTerminate(() -> isLoading.setValue(false))
                 .subscribe(
                         issues::setValue
                         , throwable -> Toast.makeText(

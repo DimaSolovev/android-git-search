@@ -9,19 +9,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.IssueAdapter;
-import com.dima.githubsearch.models.Issue;
 import com.dima.githubsearch.models.Repo;
 import com.dima.githubsearch.presenter.MainViewModel;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 public class RepoDetailActivity extends AppCompatActivity {
 
@@ -58,7 +54,7 @@ public class RepoDetailActivity extends AppCompatActivity {
         RecyclerView issueRecyclerView = findViewById(R.id.issueRecyclerView);
         issueRecyclerView.setAdapter(issueAdapter);
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        viewModel.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
+        viewModel.getIsLoading().observe(this, this::shouldClosePrBar);
         viewModel.getIssues(repo.getOwner().getLogin(), repo.getName());
         viewModel.getIssues().observe(this, issues -> {
             if (issues.isEmpty()) {
@@ -72,11 +68,11 @@ public class RepoDetailActivity extends AppCompatActivity {
         return new Intent(context, RepoDetailActivity.class);
     }
 
-    private void shouldClosePrBar(Boolean shouldClose) {
-        if (shouldClose) {
-            progressBarIssue.setVisibility(View.INVISIBLE);
-        } else {
+    private void shouldClosePrBar(Boolean isLoading) {
+        if (isLoading) {
             progressBarIssue.setVisibility(View.VISIBLE);
+        } else {
+            progressBarIssue.setVisibility(View.INVISIBLE);
         }
     }
 }

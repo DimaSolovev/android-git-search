@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(REPO, new Gson().toJson(repoAdapter.getRepoList().get(id)));
             startActivity(intent);
         });
-        viewModel.getShouldClosePrBar().observe(this, this::shouldClosePrBar);
+        viewModel.getIsLoading().observe(this, this::shouldClosePrBar);
         viewModel.getRepos().observe(this, repoList -> repoAdapter.updateList(repoList));
     }
 
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu, menu);
         SearchView searchView;
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setQueryHint("Search repo...");
         registerToSearchViewEvents(searchView);
         return true;
     }
@@ -71,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
                 .debounce(300, TimeUnit.MILLISECONDS)
-                .distinctUntilChanged()
                 .map(chars -> chars.toString().trim())
                 .distinctUntilChanged()
                 .filter(text -> {
@@ -101,11 +102,11 @@ public class MainActivity extends AppCompatActivity {
         compositeDisposable.dispose();
     }
 
-    private void shouldClosePrBar(Boolean shouldClose) {
-        if (shouldClose) {
-            progressBar.setVisibility(View.INVISIBLE);
-        } else {
+    private void shouldClosePrBar(Boolean isLoading) {
+        if (isLoading) {
             progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
         }
     }
 }
