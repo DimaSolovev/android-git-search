@@ -55,6 +55,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void searchRepos(String q) {
+
         Disposable disposable = apiService
                 .searchRepos(q, page)
                 .subscribeOn(Schedulers.io())
