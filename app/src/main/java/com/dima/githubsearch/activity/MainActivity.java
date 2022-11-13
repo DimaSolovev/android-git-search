@@ -86,9 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     viewModel.searchRepos(text);
                     repoAdapter.setOnReachEndListener(() -> viewModel.searchRepos(text)
                     );
-                }, throwable -> {
-                    Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                }, throwable -> Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show());
         compositeDisposable.add(disposable);
     }
 
