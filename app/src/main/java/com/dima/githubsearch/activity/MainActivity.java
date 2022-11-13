@@ -50,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
         viewModel.getIsLoading().observe(this, this::shouldClosePrBar);
-        viewModel.getRepos().observe(this, repoList -> {
-            repoAdapter.setRepos(repoList);
-        });
+        viewModel.getRepos().observe(this, repoList -> repoAdapter.setRepos(repoList));
     }
 
     @Override
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
-                .debounce(200, TimeUnit.MILLISECONDS)
+                .debounce(300, TimeUnit.MILLISECONDS)
                 .map(chars -> chars.toString().trim())
                 .filter(text -> {
                     if (text.isEmpty()) {
