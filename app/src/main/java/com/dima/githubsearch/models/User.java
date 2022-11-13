@@ -2,7 +2,9 @@ package com.dima.githubsearch.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     @SerializedName("login")
     private String login;

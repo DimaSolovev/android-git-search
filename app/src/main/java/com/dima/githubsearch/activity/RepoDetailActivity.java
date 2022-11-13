@@ -16,14 +16,13 @@ import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.IssueAdapter;
 import com.dima.githubsearch.models.Repo;
 import com.dima.githubsearch.presenter.MainViewModel;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 public class RepoDetailActivity extends AppCompatActivity {
 
     private IssueAdapter issueAdapter;
     private ProgressBar progressBarIssue;
-    private static final String REPO = "repo";
+    private static final String EXTRA_REPO = "repo";
     private TextView textViewIssueNotFound;
 
     @Override
@@ -38,13 +37,12 @@ public class RepoDetailActivity extends AppCompatActivity {
         textViewIssueNotFound = findViewById(R.id.textViewIssueNotFound);
 
         Intent intent = getIntent();
-        String reposJSON = null;
-        if (intent != null && intent.hasExtra(REPO)) {
-            reposJSON = intent.getStringExtra(REPO);
+        Repo repo = null;
+        if (intent != null && intent.hasExtra(EXTRA_REPO)) {
+            repo = (Repo) getIntent().getSerializableExtra(EXTRA_REPO);
         } else {
             finish();
         }
-        Repo repo = new Gson().fromJson(reposJSON, Repo.class);
 
         Picasso.get().load(repo.getOwner().getAvatarUrl()).placeholder(R.drawable.def).into(imageView);
         textViewRepoName.setText(repo.getFullName());
@@ -64,8 +62,10 @@ public class RepoDetailActivity extends AppCompatActivity {
         });
     }
 
-    public static Intent newIntent(Context context) {
-        return new Intent(context, RepoDetailActivity.class);
+    public static Intent newIntent(Context context, Repo repo) {
+        Intent intent = new Intent(context, RepoDetailActivity.class);
+        intent.putExtra(EXTRA_REPO, repo);
+        return intent;
     }
 
     private void shouldClosePrBar(Boolean isLoading) {

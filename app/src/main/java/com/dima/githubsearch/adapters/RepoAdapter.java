@@ -19,32 +19,29 @@ import java.util.List;
 public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
 
     private List<Repo> repoList = new ArrayList<>();
+
     private OnReachEndListener onReachEndListener;
-    private OnClickListener onClickListener;
+    private OnRepoClickListener onRepoClickListener;
 
     public interface OnReachEndListener {
         void onReachEnd();
     }
 
-    public interface OnClickListener {
-        void onClick(int id);
+    public interface OnRepoClickListener {
+        void onRepoClick(Repo repo);
     }
 
     public void setOnReachEndListener(OnReachEndListener onReachEndListener) {
         this.onReachEndListener = onReachEndListener;
     }
 
-    public void setOnClickListener(OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+    public void setOnRepoClickListener(OnRepoClickListener onRepoClickListener) {
+        this.onRepoClickListener = onRepoClickListener;
     }
 
     public void updateList(List<Repo> repos) {
         repoList = repos;
         notifyDataSetChanged();
-    }
-
-    public List<Repo> getRepoList() {
-        return repoList;
     }
 
     @NonNull
@@ -62,9 +59,10 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
                 .into(holder.imageViewAvatar);
         holder.textViewRepositoryName.setText(repo.getFullName());
         holder.textViewRepositoryDescription.setText(repo.getDescription());
-        if (position == repoList.size() - 1 && onReachEndListener != null && repoList.size() > 10) {
+        if (position >= repoList.size() - 10 && onReachEndListener != null && repoList.size() > 10) {
             onReachEndListener.onReachEnd();
         }
+        holder.itemView.setOnClickListener(v -> onRepoClickListener.onRepoClick(repo));
     }
 
     @Override
@@ -72,7 +70,7 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
         return repoList.size();
     }
 
-    class RepoViewHolder extends RecyclerView.ViewHolder {
+    static class RepoViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView imageViewAvatar;
         private final TextView textViewRepositoryName;
@@ -83,11 +81,6 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
             imageViewAvatar = itemView.findViewById(R.id.avatar);
             textViewRepositoryName = itemView.findViewById(R.id.repositoryName);
             textViewRepositoryDescription = itemView.findViewById(R.id.repositoryDescription);
-            itemView.setOnClickListener(v -> {
-                if (onClickListener != null) {
-                    onClickListener.onClick(getAdapterPosition());
-                }
-            });
         }
     }
 }

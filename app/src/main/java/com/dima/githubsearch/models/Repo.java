@@ -2,7 +2,9 @@ package com.dima.githubsearch.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Repo {
+import java.io.Serializable;
+
+public class Repo implements Serializable {
 
     @SerializedName("name")
     private String name;

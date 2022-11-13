@@ -11,14 +11,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.RepoAdapter;
 import com.dima.githubsearch.presenter.MainViewModel;
-import com.google.gson.Gson;
 import com.jakewharton.rxbinding3.appcompat.RxSearchView;
 
 import java.util.concurrent.TimeUnit;
@@ -28,7 +26,6 @@ import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String REPO = "repo";
     private MainViewModel viewModel;
     private CompositeDisposable compositeDisposable;
     private RepoAdapter repoAdapter;
@@ -48,9 +45,8 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setAdapter(repoAdapter);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        repoAdapter.setOnClickListener(id -> {
-            Intent intent = RepoDetailActivity.newIntent(MainActivity.this);
-            intent.putExtra(REPO, new Gson().toJson(repoAdapter.getRepoList().get(id)));
+        repoAdapter.setOnRepoClickListener(repo -> {
+            Intent intent = RepoDetailActivity.newIntent(MainActivity.this, repo);
             startActivity(intent);
         });
         viewModel.getIsLoading().observe(this, this::shouldClosePrBar);
@@ -72,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
-                .debounce(300, TimeUnit.MILLISECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .map(chars -> chars.toString().trim())
                 .distinctUntilChanged()
                 .filter(text -> {
