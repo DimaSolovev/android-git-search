@@ -39,8 +39,9 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
         this.onRepoClickListener = onRepoClickListener;
     }
 
-    public void updateList(List<Repo> repos) {
-        repoList = repos;
+    public void setRepos(List<Repo> repos) {
+        repoList.clear();
+        repoList.addAll(repos);
         notifyDataSetChanged();
     }
 

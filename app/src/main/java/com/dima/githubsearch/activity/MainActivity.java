@@ -50,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
         viewModel.getIsLoading().observe(this, this::shouldClosePrBar);
-        viewModel.getRepos().observe(this, repoList -> repoAdapter.updateList(repoList));
+        viewModel.getRepos().observe(this, repoList -> {
+            repoAdapter.setRepos(repoList);
+        });
     }
 
     @Override
@@ -70,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 .queryTextChanges(searchView)
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .map(chars -> chars.toString().trim())
-                .distinctUntilChanged()
                 .filter(text -> {
                     if (text.isEmpty()) {
                         viewModel.clearRepoPayload();
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return true;
                 })
+                .distinctUntilChanged()
                 .subscribe(text -> {
                     if (text.length() != charSequenceLength) {
                         viewModel.clearRepoPayload();
