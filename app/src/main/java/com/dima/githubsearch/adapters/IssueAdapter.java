@@ -21,10 +21,10 @@ import java.util.List;
 public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHolder> {
 
     private static final String TYPE_OPEN = "open";
-    private List<Issue> issueList = new ArrayList<>();
+    private List<Issue> issues = new ArrayList<>();
 
-    public void updateList(List<Issue> issues) {
-        issueList = issues;
+    public void updateList(List<Issue> issuesList) {
+        issues = issuesList;
         notifyDataSetChanged();
     }
 
@@ -38,7 +38,7 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
 
     @Override
     public void onBindViewHolder(@NonNull IssueViewHolder holder, int position) {
-        Issue issue = issueList.get(position);
+        Issue issue = issues.get(position);
         holder.textViewIssueTitle.setText(issue.getTitle());
         try {
             holder.textViewIssueCreatedAt.setText(TimeUtils.convertToNewFormat(issue.getCreatedAt()));
@@ -57,7 +57,7 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
 
     @Override
     public int getItemCount() {
-        return issueList.size();
+        return issues.size();
     }
 
     static class IssueViewHolder extends RecyclerView.ViewHolder {

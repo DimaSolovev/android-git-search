@@ -1,6 +1,7 @@
 package com.dima.githubsearch.presenter;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -55,6 +56,10 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void searchRepos(String q) {
+        Boolean loading = isLoading.getValue();
+        if(loading !=null && loading){
+            return;
+        }
         Disposable disposable = apiService
                 .searchRepos(q, page)
                 .subscribeOn(Schedulers.io())

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
 
-    private List<Repo> repoList = new ArrayList<>();
+    private List<Repo> repos = new ArrayList<>();
 
     private OnReachEndListener onReachEndListener;
     private OnRepoClickListener onRepoClickListener;
@@ -39,9 +39,9 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
         this.onRepoClickListener = onRepoClickListener;
     }
 
-    public void setRepos(List<Repo> repos) {
-        repoList.clear();
-        repoList.addAll(repos);
+    public void setRepos(List<Repo> reposList) {
+        repos.clear();
+        repos.addAll(reposList);
         notifyDataSetChanged();
     }
 
@@ -55,13 +55,13 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RepoViewHolder holder, int position) {
-        Repo repo = repoList.get(position);
+        Repo repo = repos.get(position);
         Picasso.get().load(repo.getOwner().getAvatarUrl())
                 .placeholder(R.drawable.def)
                 .into(holder.imageViewAvatar);
         holder.textViewRepositoryName.setText(repo.getFullName());
         holder.textViewRepositoryDescription.setText(repo.getDescription());
-        if (position >= repoList.size() - 10 && onReachEndListener != null && repoList.size() > 10) {
+        if (position == repos.size() - 10 && onReachEndListener != null && repos.size() > 10) {
             onReachEndListener.onReachEnd();
         }
         holder.itemView.setOnClickListener(v -> onRepoClickListener.onRepoClick(repo));
@@ -69,7 +69,7 @@ public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder
 
     @Override
     public int getItemCount() {
-        return repoList.size();
+        return repos.size();
     }
 
     static class RepoViewHolder extends RecyclerView.ViewHolder {
