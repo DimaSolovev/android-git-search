@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.models.Issue;
+import com.dima.githubsearch.utils.TimeUtils;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,11 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
     public void onBindViewHolder(@NonNull IssueViewHolder holder, int position) {
         Issue issue = issueList.get(position);
         holder.textViewIssueTitle.setText(issue.getTitle());
-        holder.textViewIssueCreatedAt.setText(issue.getCreatedAt());
+        try {
+            holder.textViewIssueCreatedAt.setText(TimeUtils.convertToNewFormat(issue.getCreatedAt()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         holder.textViewIssueStatus.setText(issue.getState());
         String state = issue.getState();
         int colorResId = android.R.color.holo_green_light;
