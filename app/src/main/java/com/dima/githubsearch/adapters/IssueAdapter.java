@@ -1,12 +1,13 @@
 package com.dima.githubsearch.adapters;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHolder> {
 
+    private static final String TYPE_OPEN = "open";
     private List<Issue> issueList = new ArrayList<>();
 
     public void updateList(List<Issue> issues) {
@@ -27,7 +29,8 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
     @NonNull
     @Override
     public IssueViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.issue_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.issue_item, parent, false);
         return new IssueViewHolder(view);
     }
 
@@ -36,13 +39,14 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
         Issue issue = issueList.get(position);
         holder.textViewIssueTitle.setText(issue.getTitle());
         holder.textViewIssueCreatedAt.setText(issue.getCreatedAt());
+        holder.textViewIssueStatus.setText(issue.getState());
         String state = issue.getState();
-        if (state.equals("open")) {
-            holder.textViewIssueStatus.setTextColor(Color.RED);
-        } else {
-            holder.textViewIssueStatus.setTextColor(Color.GREEN);
+        int colorResId = android.R.color.holo_green_light;
+        if (state.equals(TYPE_OPEN)) {
+            colorResId = android.R.color.holo_red_light;
         }
-        holder.textViewIssueStatus.setText(state);
+        int color = ContextCompat.getColor(holder.itemView.getContext(), colorResId);
+        holder.constraintLayoutIssue.setBackgroundColor(color);
     }
 
     @Override
@@ -55,12 +59,14 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
         private final TextView textViewIssueTitle;
         private final TextView textViewIssueCreatedAt;
         private final TextView textViewIssueStatus;
+        private final ConstraintLayout constraintLayoutIssue;
 
         public IssueViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewIssueTitle = itemView.findViewById(R.id.textViewIssueTitle);
             textViewIssueCreatedAt = itemView.findViewById(R.id.textViewIssueCreatedAt);
             textViewIssueStatus = itemView.findViewById(R.id.textViewIssueStatus);
+            constraintLayoutIssue = itemView.findViewById(R.id.constraintLayoutIssue);
         }
     }
 }

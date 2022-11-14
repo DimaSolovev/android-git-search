@@ -27,8 +27,8 @@ public class MainViewModel extends AndroidViewModel {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     ApiService apiService = ApiFactory.getInstance().getApiService();
     private int page = 1;
-    private final MutableLiveData<Boolean> isLoading = new MutableLiveData(false);
-    private final MutableLiveData<List<Repo>> repos = new MutableLiveData();
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
+    private final MutableLiveData<List<Repo>> repos = new MutableLiveData<>();
     private final MutableLiveData<List<Issue>> issues = new MutableLiveData<>();
     private final List<Repo> repoList = new ArrayList<>();
 
