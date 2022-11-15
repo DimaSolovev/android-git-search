@@ -1,12 +1,14 @@
 package com.dima.githubsearch.presenter;
 
 import android.app.Application;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.dima.githubsearch.R;
 import com.dima.githubsearch.api.ApiFactory;
 import com.dima.githubsearch.api.ApiService;
 import com.dima.githubsearch.models.Repo;
@@ -26,7 +28,6 @@ public class MainViewModel extends AndroidViewModel {
     private int page = 1;
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private final MutableLiveData<List<Repo>> repos = new MutableLiveData<>();
-    private final MutableLiveData<String> error = new MutableLiveData<>();
     private final List<Repo> repoList = new ArrayList<>();
 
     public MainViewModel(@NonNull Application application) {
@@ -39,10 +40,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public LiveData<List<Repo>> getRepos() {
         return repos;
-    }
-
-    public LiveData<String> getError() {
-        return error;
     }
 
     public void clearRepoPayload() {
@@ -67,7 +64,19 @@ public class MainViewModel extends AndroidViewModel {
                             page++;
                             repoList.addAll(reposPayload.getItems());
                             repos.setValue(repoList);
-                        }, throwable -> error.setValue(throwable.getLocalizedMessage()));
+                        }, throwable -> {
+                            if (throwable.getMessage().contains("HTTP 403")) {
+                                Toast.makeText(
+                                        getApplication(),
+                                        R.string.error_repo_limit,
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(
+                                        getApplication(),
+                                        throwable.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
         compositeDisposable.add(disposable);
     }
 

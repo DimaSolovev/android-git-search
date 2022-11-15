@@ -76,19 +76,6 @@ public class RepoDetailActivity extends AppCompatActivity {
             }
             issueAdapter.updateList(issues);
         });
-        viewModel.getError().observe(this, errorMessage -> {
-            if (errorMessage.contains("HTTP 403")) {
-                Toast.makeText(
-                        RepoDetailActivity.this,
-                        R.string.error_issue_limit,
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(
-                        RepoDetailActivity.this,
-                        errorMessage,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public static Intent newIntent(Context context, Repo repo) {

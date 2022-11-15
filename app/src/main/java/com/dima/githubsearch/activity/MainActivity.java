@@ -2,7 +2,6 @@ package com.dima.githubsearch.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.ProgressBar;
@@ -102,20 +101,6 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getIsLoading().observe(this,
                 isLoading -> Utils.shouldClosePrBar(isLoading, progressBar));
         viewModel.getRepos().observe(this, repoList -> repoAdapter.setRepos(repoList));
-        viewModel.getError().observe(this, errorMessage -> {
-            Log.d("MainActivity", errorMessage);
-            if (errorMessage.contains("HTTP 403")) {
-                Toast.makeText(
-                        MainActivity.this,
-                        R.string.error_repo_limit,
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(
-                        MainActivity.this,
-                        errorMessage,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
