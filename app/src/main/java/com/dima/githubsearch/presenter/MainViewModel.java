@@ -1,6 +1,7 @@
 package com.dima.githubsearch.presenter;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -61,6 +62,7 @@ public class MainViewModel extends AndroidViewModel {
                 .doAfterTerminate(() -> isLoading.postValue(false))
                 .subscribe(
                         reposPayload -> {
+                            Log.d("MainViewModel", String.valueOf(page));
                             page++;
                             repoList.addAll(reposPayload.getItems());
                             repos.setValue(repoList);
@@ -69,6 +71,11 @@ public class MainViewModel extends AndroidViewModel {
                                 Toast.makeText(
                                         getApplication(),
                                         R.string.error_repo_limit,
+                                        Toast.LENGTH_SHORT).show();
+                            } else if (throwable.getMessage().contains("HTTP 422")) {
+                                Toast.makeText(
+                                        getApplication(),
+                                        R.string.error_results_limit,
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(

@@ -2,6 +2,7 @@
     <string name="app_name">GitHub Search</string>
     <string name="error_repo_limit">You have reached the limit repo requests. Try again later</string>
     <string name="error_issue_limit">You have reached the limit issue requests. Try again later</string>
+    <string name="error_results_limit">Only the first 1000 search results are available</string>
     <string name="repo_avatar">avatar</string>
     <string name="repository_name">Repository name :</string>
     <string name="repository_descr">Repository descr :</string>
