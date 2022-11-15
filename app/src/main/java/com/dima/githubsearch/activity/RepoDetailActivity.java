@@ -16,6 +16,7 @@ import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.IssueAdapter;
 import com.dima.githubsearch.models.Repo;
 import com.dima.githubsearch.presenter.MainViewModel;
+import com.dima.githubsearch.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 public class RepoDetailActivity extends AppCompatActivity {
@@ -46,10 +47,12 @@ public class RepoDetailActivity extends AppCompatActivity {
         Picasso.get().load(repo.getOwner().getAvatarUrl()).placeholder(R.drawable.def).into(imageView);
         textViewRepoName.setText(repo.getFullName());
         textViewRepoDescription.setText(repo.getDescription());
+
         issueAdapter = new IssueAdapter();
         issueRecyclerView.setAdapter(issueAdapter);
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        viewModel.getIsLoading().observe(this, this::shouldClosePrBar);
+        viewModel.getIsLoading().observe(this,
+                isLoading -> Utils.shouldClosePrBar(isLoading, progressBarIssue));
         viewModel.getIssues(repo.getOwner().getLogin(), repo.getName());
         viewModel.getIssues().observe(this, issues -> {
             if (issues.isEmpty()) {
@@ -74,11 +77,5 @@ public class RepoDetailActivity extends AppCompatActivity {
         return intent;
     }
 
-    private void shouldClosePrBar(Boolean isLoading) {
-        if (isLoading) {
-            progressBarIssue.setVisibility(View.VISIBLE);
-        } else {
-            progressBarIssue.setVisibility(View.INVISIBLE);
-        }
-    }
+
 }

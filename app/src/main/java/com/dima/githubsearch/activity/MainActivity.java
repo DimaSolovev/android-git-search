@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.RepoAdapter;
 import com.dima.githubsearch.presenter.MainViewModel;
+import com.dima.githubsearch.utils.Utils;
 import com.jakewharton.rxbinding3.appcompat.RxSearchView;
 
 import java.util.concurrent.TimeUnit;
@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = RepoDetailActivity.newIntent(MainActivity.this, repo);
             startActivity(intent);
         });
-        viewModel.getIsLoading().observe(this, this::shouldClosePrBar);
+        viewModel.getIsLoading().observe(this,
+                isLoading -> Utils.shouldClosePrBar(isLoading, progressBar));
         viewModel.getRepos().observe(this, repoList -> repoAdapter.setRepos(repoList));
     }
 
@@ -99,13 +100,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
-    }
-
-    private void shouldClosePrBar(Boolean isLoading) {
-        if (isLoading) {
-            progressBar.setVisibility(View.VISIBLE);
-        } else {
-            progressBar.setVisibility(View.INVISIBLE);
-        }
     }
 }
