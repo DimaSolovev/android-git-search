@@ -1,7 +1,6 @@
 package com.dima.githubsearch.presenter;
 
 import android.app.Application;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
