@@ -26,23 +26,22 @@ import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity {
 
+    public ProgressBar progressBar;
+    private Toolbar toolbar;
+    private RecyclerView recyclerView;
     private MainViewModel viewModel;
     private CompositeDisposable compositeDisposable;
     private RepoAdapter repoAdapter;
-    public ProgressBar progressBar;
     private int charSequenceLength = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        initViews();
         compositeDisposable = new CompositeDisposable();
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        progressBar = findViewById(R.id.progressBar);
         setSupportActionBar(toolbar);
         repoAdapter = new RepoAdapter();
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setAdapter(repoAdapter);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         repoAdapter.setOnRepoClickListener(repo -> {
@@ -62,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
         searchView.setQueryHint("Search repo...");
         registerToSearchViewEvents(searchView);
         return true;
+    }
+
+    private void initViews() {
+        progressBar = findViewById(R.id.progressBar);
+        toolbar = findViewById(R.id.toolbar);
+        recyclerView = findViewById(R.id.recyclerView);
     }
 
     public void registerToSearchViewEvents(SearchView searchView) {

@@ -20,21 +20,20 @@ import com.squareup.picasso.Picasso;
 
 public class RepoDetailActivity extends AppCompatActivity {
 
-    private IssueAdapter issueAdapter;
-    private ProgressBar progressBarIssue;
-    private static final String EXTRA_REPO = "repo";
+    private ImageView imageView;
+    private TextView textViewRepoName;
+    private TextView textViewRepoDescription;
     private TextView textViewIssueNotFound;
+    private ProgressBar progressBarIssue;
+    private RecyclerView issueRecyclerView;
+    private IssueAdapter issueAdapter;
+    private static final String EXTRA_REPO = "repo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repo_detail);
-
-        progressBarIssue = findViewById(R.id.progressBarIssue);
-        ImageView imageView = findViewById(R.id.imageView);
-        TextView textViewRepoName = findViewById(R.id.textViewRepoName);
-        TextView textViewRepoDescription = findViewById(R.id.textViewRepoDescription);
-        textViewIssueNotFound = findViewById(R.id.textViewIssueNotFound);
+        initViews();
 
         Intent intent = getIntent();
         Repo repo = null;
@@ -47,9 +46,7 @@ public class RepoDetailActivity extends AppCompatActivity {
         Picasso.get().load(repo.getOwner().getAvatarUrl()).placeholder(R.drawable.def).into(imageView);
         textViewRepoName.setText(repo.getFullName());
         textViewRepoDescription.setText(repo.getDescription());
-
         issueAdapter = new IssueAdapter();
-        RecyclerView issueRecyclerView = findViewById(R.id.issueRecyclerView);
         issueRecyclerView.setAdapter(issueAdapter);
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.getIsLoading().observe(this, this::shouldClosePrBar);
@@ -60,6 +57,15 @@ public class RepoDetailActivity extends AppCompatActivity {
             }
             issueAdapter.updateList(issues);
         });
+    }
+
+    private void initViews() {
+        imageView = findViewById(R.id.imageView);
+        textViewRepoName = findViewById(R.id.textViewRepoName);
+        textViewRepoDescription = findViewById(R.id.textViewRepoDescription);
+        textViewIssueNotFound = findViewById(R.id.textViewIssueNotFound);
+        progressBarIssue = findViewById(R.id.progressBarIssue);
+        issueRecyclerView = findViewById(R.id.issueRecyclerView);
     }
 
     public static Intent newIntent(Context context, Repo repo) {
