@@ -10,14 +10,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.IssueAdapter;
 import com.dima.githubsearch.models.Repo;
-import com.dima.githubsearch.presenter.MainViewModel;
 import com.dima.githubsearch.presenter.RepoViewModel;
 import com.dima.githubsearch.utils.Utils;
 import com.squareup.picasso.Picasso;
@@ -78,11 +76,19 @@ public class RepoDetailActivity extends AppCompatActivity {
             }
             issueAdapter.updateList(issues);
         });
-        viewModel.getError().observe(this,
-                errorMessage -> Toast.makeText(
+        viewModel.getError().observe(this, errorMessage -> {
+            if (errorMessage.contains("HTTP 403")) {
+                Toast.makeText(
+                        RepoDetailActivity.this,
+                        R.string.error_issue_limit,
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(
                         RepoDetailActivity.this,
                         errorMessage,
-                        Toast.LENGTH_SHORT).show());
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public static Intent newIntent(Context context, Repo repo) {

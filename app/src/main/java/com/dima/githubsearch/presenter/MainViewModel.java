@@ -1,17 +1,14 @@
 package com.dima.githubsearch.presenter;
 
 import android.app.Application;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.dima.githubsearch.R;
 import com.dima.githubsearch.api.ApiFactory;
 import com.dima.githubsearch.api.ApiService;
-import com.dima.githubsearch.models.Issue;
 import com.dima.githubsearch.models.Repo;
 
 import java.util.ArrayList;
@@ -56,7 +53,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void searchRepos(String q) {
         Boolean loading = isLoading.getValue();
-        if(loading !=null && loading){
+        if (loading != null && loading) {
             return;
         }
         Disposable disposable = apiService
@@ -70,7 +67,7 @@ public class MainViewModel extends AndroidViewModel {
                             page++;
                             repoList.addAll(reposPayload.getItems());
                             repos.setValue(repoList);
-                        }, throwable -> error.setValue(throwable.getMessage()));
+                        }, throwable -> error.setValue(throwable.getLocalizedMessage()));
         compositeDisposable.add(disposable);
     }
 

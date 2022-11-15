@@ -2,16 +2,15 @@ package com.dima.githubsearch.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         Disposable disposable = RxSearchView
                 .queryTextChanges(searchView)
-                .debounce(300, TimeUnit.MILLISECONDS)
+                .debounce(400, TimeUnit.MILLISECONDS)
                 .map(chars -> chars.toString().trim())
                 .filter(text -> {
                     if (text.isEmpty()) {
@@ -84,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return true;
                 })
-                .distinctUntilChanged()
                 .subscribe(text -> {
                     if (text.length() != charSequenceLength) {
                         viewModel.clearRepoPayload();
@@ -93,7 +91,10 @@ public class MainActivity extends AppCompatActivity {
                     viewModel.searchRepos(text);
                     repoAdapter.setOnReachEndListener(() -> viewModel.searchRepos(text)
                     );
-                }, throwable -> Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show());
+                }, throwable -> Toast.makeText(
+                        this,
+                        throwable.getMessage(),
+                        Toast.LENGTH_SHORT).show());
         compositeDisposable.add(disposable);
     }
 
@@ -101,10 +102,18 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getIsLoading().observe(this,
                 isLoading -> Utils.shouldClosePrBar(isLoading, progressBar));
         viewModel.getRepos().observe(this, repoList -> repoAdapter.setRepos(repoList));
-        viewModel.getError().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String errorMessage) {
-                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+        viewModel.getError().observe(this, errorMessage -> {
+            Log.d("MainActivity", errorMessage);
+            if (errorMessage.contains("HTTP 403")) {
+                Toast.makeText(
+                        MainActivity.this,
+                        R.string.error_repo_limit,
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(
+                        MainActivity.this,
+                        errorMessage,
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
