@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,19 +40,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initViews();
-        compositeDisposable = new CompositeDisposable();
         setSupportActionBar(toolbar);
-        repoAdapter = new RepoAdapter();
-        recyclerView.setAdapter(repoAdapter);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        observeViewModel();
         repoAdapter.setOnRepoClickListener(repo -> {
             Intent intent = RepoDetailActivity.newIntent(MainActivity.this, repo);
             startActivity(intent);
         });
-        viewModel.getIsLoading().observe(this,
-                isLoading -> Utils.shouldClosePrBar(isLoading, progressBar));
-        viewModel.getRepos().observe(this, repoList -> repoAdapter.setRepos(repoList));
     }
 
     @Override
@@ -68,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.recyclerView);
+        repoAdapter = new RepoAdapter();
+        recyclerView.setAdapter(repoAdapter);
+        compositeDisposable = new CompositeDisposable();
     }
 
     public void registerToSearchViewEvents(SearchView searchView) {
@@ -94,6 +95,18 @@ public class MainActivity extends AppCompatActivity {
                     );
                 }, throwable -> Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show());
         compositeDisposable.add(disposable);
+    }
+
+    private void observeViewModel() {
+        viewModel.getIsLoading().observe(this,
+                isLoading -> Utils.shouldClosePrBar(isLoading, progressBar));
+        viewModel.getRepos().observe(this, repoList -> repoAdapter.setRepos(repoList));
+        viewModel.getError().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String errorMessage) {
+                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

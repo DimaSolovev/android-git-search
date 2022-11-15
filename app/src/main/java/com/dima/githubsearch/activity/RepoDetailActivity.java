@@ -7,8 +7,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +18,7 @@ import com.dima.githubsearch.R;
 import com.dima.githubsearch.adapters.IssueAdapter;
 import com.dima.githubsearch.models.Repo;
 import com.dima.githubsearch.presenter.MainViewModel;
+import com.dima.githubsearch.presenter.RepoViewModel;
 import com.dima.githubsearch.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -29,13 +32,14 @@ public class RepoDetailActivity extends AppCompatActivity {
     private RecyclerView issueRecyclerView;
     private IssueAdapter issueAdapter;
     private static final String EXTRA_REPO = "repo";
+    private RepoViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repo_detail);
-        initViews();
 
+        initViews();
         Intent intent = getIntent();
         Repo repo = null;
         if (intent != null && intent.hasExtra(EXTRA_REPO)) {
@@ -44,22 +48,14 @@ public class RepoDetailActivity extends AppCompatActivity {
             finish();
         }
 
-        Picasso.get().load(repo.getOwner().getAvatarUrl()).placeholder(R.drawable.def).into(imageView);
+        Picasso.get().load(repo.getOwner()
+                .getAvatarUrl()).placeholder(R.drawable.def).into(imageView);
         textViewRepoName.setText(repo.getFullName());
         textViewRepoDescription.setText(repo.getDescription());
 
-        issueAdapter = new IssueAdapter();
-        issueRecyclerView.setAdapter(issueAdapter);
-        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        viewModel.getIsLoading().observe(this,
-                isLoading -> Utils.shouldClosePrBar(isLoading, progressBarIssue));
+        viewModel = new ViewModelProvider(this).get(RepoViewModel.class);
+        observeViewModel();
         viewModel.getIssues(repo.getOwner().getLogin(), repo.getName());
-        viewModel.getIssues().observe(this, issues -> {
-            if (issues.isEmpty()) {
-                textViewIssueNotFound.setVisibility(View.VISIBLE);
-            }
-            issueAdapter.updateList(issues);
-        });
     }
 
     private void initViews() {
@@ -69,6 +65,24 @@ public class RepoDetailActivity extends AppCompatActivity {
         textViewIssueNotFound = findViewById(R.id.textViewIssueNotFound);
         progressBarIssue = findViewById(R.id.progressBarIssue);
         issueRecyclerView = findViewById(R.id.issueRecyclerView);
+        issueAdapter = new IssueAdapter();
+        issueRecyclerView.setAdapter(issueAdapter);
+    }
+
+    private void observeViewModel() {
+        viewModel.getIsLoading().observe(this,
+                isLoading -> Utils.shouldClosePrBar(isLoading, progressBarIssue));
+        viewModel.getIssues().observe(this, issues -> {
+            if (issues.isEmpty()) {
+                textViewIssueNotFound.setVisibility(View.VISIBLE);
+            }
+            issueAdapter.updateList(issues);
+        });
+        viewModel.getError().observe(this,
+                errorMessage -> Toast.makeText(
+                        RepoDetailActivity.this,
+                        errorMessage,
+                        Toast.LENGTH_SHORT).show());
     }
 
     public static Intent newIntent(Context context, Repo repo) {
