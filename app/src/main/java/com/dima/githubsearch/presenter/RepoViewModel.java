@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.dima.githubsearch.R;
-import com.dima.githubsearch.activity.RepoDetailActivity;
 import com.dima.githubsearch.api.ApiFactory;
 import com.dima.githubsearch.api.ApiService;
 import com.dima.githubsearch.models.Issue;

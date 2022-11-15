@@ -18,7 +18,7 @@ import java.util.List;
 
 public class RepoAdapter extends RecyclerView.Adapter<RepoAdapter.RepoViewHolder> {
 
-    private List<Repo> repos = new ArrayList<>();
+    private final List<Repo> repos = new ArrayList<>();
 
     private OnReachEndListener onReachEndListener;
     private OnRepoClickListener onRepoClickListener;
